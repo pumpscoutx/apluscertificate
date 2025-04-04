@@ -140,16 +140,18 @@ function verifyCertificate() {
         const cert = verifiedCertificates.get(certId);
         resultDiv.className = 'success';
         resultDiv.innerHTML = `
-            <h3>✓ Valid Certificate</h3>
-            <p>Issued to: ${cert.name}</p>
-            <p>Date: ${cert.date}</p>
-            <p>This is an official certificate from A+ Tutorial Class</p>
+            <h3><i class="fas fa-check-circle"></i> Certificate Verified</h3>
+            <p><strong>Issued to:</strong> ${cert.name}</p>
+            <p><strong>Date:</strong> ${cert.date}</p>
+            <p><strong>Status:</strong> Valid A+ Tutorial Class Certificate</p>
+            <p class="verification-note">This certificate has been verified as authentic and was issued by A+ Tutorial Class.</p>
         `;
     } else {
         resultDiv.className = 'error';
         resultDiv.innerHTML = `
-            <h3>✗ Invalid Certificate</h3>
+            <h3><i class="fas fa-times-circle"></i> Invalid Certificate</h3>
             <p>This certificate ID is not recognized in our system.</p>
+            <p>Please check the ID and try again.</p>
         `;
     }
 }

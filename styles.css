@@ -238,9 +238,25 @@ button.secondary {
 }
 
 .signature-divider {
-    font-size: 24px;
-    color: var(--golden);
-    margin: 0 20px;
+    margin: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.divider-star {
+    width: 48px;
+    height: 48px;
+    animation: starRotate 20s linear infinite;
+}
+
+@keyframes starRotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .signature-text {
@@ -346,9 +362,36 @@ button.secondary {
 }
 
 #verificationResult.success {
-    background-color: rgba(212, 175, 55, 0.1);
-    color: var(--grey);
-    border: 1px solid var(--golden);
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid #28a745;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#verificationResult.success h3 {
+    color: #28a745;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+#verificationResult.success p {
+    color: #28a745;
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 #verificationResult.error {
