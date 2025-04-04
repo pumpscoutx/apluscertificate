@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Top golden line -->
+    <path d="M50,50 L150,20 L250,50" stroke="#D4AF37" stroke-width="8" fill="none"/>
+    
+    <!-- Bottom golden line -->
+    <path d="M50,250 L150,280 L250,250" stroke="#D4AF37" stroke-width="8" fill="none"/>
+    
+    <!-- Center icon and text -->
+    <g transform="translate(150,150)" text-anchor="middle">
+        <!-- Stick figure reading -->
+        <circle cx="0" cy="-20" r="15" fill="white" stroke="#D4AF37" stroke-width="3"/>
+        <line x1="-10" y1="10" x2="10" y2="10" stroke="white" stroke-width="3"/>
+        <line x1="0" y1="0" x2="0" y2="30" stroke="white" stroke-width="3"/>
+        <line x1="-15" y1="40" x2="0" y2="30" stroke="white" stroke-width="3"/>
+        <line x1="15" y1="40" x2="0" y2="30" stroke="white" stroke-width="3"/>
+        
+        <!-- Book -->
+        <path d="M-20,0 C-20,10 20,10 20,0 V30 C20,40 -20,40 -20,30 Z" fill="none" stroke="white" stroke-width="3"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="150" y="220" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">A+ TUTORIAL CLASS</text>
+    <text x="150" y="240" font-family="Arial" font-size="12" fill="#D4AF37" text-anchor="middle">YOUR SUCCESS IS GUARANTEED WITH A+</text>
+</svg> 

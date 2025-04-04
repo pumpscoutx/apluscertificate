@@ -1,0 +1,389 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Playfair Display', serif;
+}
+
+:root {
+    --golden: #D4AF37;
+    --grey: #4A4A4A;
+    --light-grey: #f5f5f5;
+    --gradient: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: var(--grey);
+}
+
+.verify-button-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.verify-btn {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    font-weight: bold;
+}
+
+.verify-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+}
+
+.step {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    border: 2px solid var(--golden);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.step:hover {
+    transform: translateY(-5px);
+}
+
+.form-header {
+    margin-bottom: 40px;
+}
+
+.form-header .logo {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
+}
+
+.form-header h1 {
+    color: var(--grey);
+    font-size: 36px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-header p {
+    color: var(--golden);
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+input[type="text"] {
+    padding: 18px 25px;
+    border: 2px solid var(--golden);
+    border-radius: 12px;
+    font-size: 16px;
+    width: 100%;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+
+button {
+    padding: 18px 35px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    background: var(--gradient);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+button.secondary {
+    background: var(--grey);
+    color: white;
+}
+
+.help-text {
+    color: var(--grey);
+    font-size: 14px;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+/* Certificate Styles */
+.certificate {
+    background: white;
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    padding: 40px;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.border-design {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 2px solid var(--golden);
+    border-radius: 5px;
+}
+
+.border-design::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 1px solid var(--golden);
+    border-radius: 8px;
+}
+
+.certificate-content {
+    position: relative;
+    z-index: 1;
+    padding: 60px;
+    text-align: center;
+}
+
+.cert-logo {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 30px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
+}
+
+.certificate-header h1 {
+    font-size: 42px;
+    color: var(--grey);
+    margin-bottom: 40px;
+    letter-spacing: 4px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.old-english {
+    font-family: 'Old English Text MT', serif;
+    font-size: 82px;
+    color: var(--golden);
+    margin-bottom: 10px;
+    font-weight: normal;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.certificate-body h3 {
+    font-size: 28px;
+    color: var(--grey);
+    margin-bottom: 40px;
+    letter-spacing: 6px;
+}
+
+.presented-text {
+    font-size: 20px;
+    color: var(--grey);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.recipient-name {
+    font-size: 52px;
+    color: var(--golden);
+    margin: 30px 0;
+    font-family: 'Dancing Script', cursive;
+    padding-bottom: 10px;
+    display: inline-block;
+    border-bottom: 2px solid var(--golden);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-text {
+    margin: 40px 0;
+    line-height: 2;
+}
+
+.achievement-text p {
+    color: var(--grey);
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.signatures {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+.signature {
+    text-align: center;
+    width: 200px;
+}
+
+.signature-divider {
+    font-size: 32px;
+    color: var(--golden);
+    margin: 0 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.signature-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 36px;
+    color: var(--grey);
+    margin-bottom: 10px;
+}
+
+.signature-line {
+    width: 100%;
+    height: 2px;
+    background: var(--gradient);
+    margin-bottom: 10px;
+}
+
+.signature .name {
+    font-size: 20px;
+    color: var(--grey);
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.signature .title {
+    font-size: 16px;
+    color: var(--golden);
+    font-weight: 500;
+}
+
+.certificate-info {
+    text-align: center;
+    color: var(--grey);
+    font-size: 16px;
+    margin-top: 30px;
+}
+
+.download-options {
+    display: flex;
+    justify-content: center;
+    margin: 30px auto;
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 45px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: var(--gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    margin: 15% auto;
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--golden);
+    backdrop-filter: blur(10px);
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--grey);
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    color: var(--golden);
+    transform: scale(1.1);
+}
+
+#verificationResult {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+#verificationResult.success {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--grey);
+    border: 1px solid var(--golden);
+}
+
+#verificationResult.error {
+    background: rgba(220, 53, 69, 0.1);
+    color: #721c24;
+    border: 1px solid #dc3545;
+} 
