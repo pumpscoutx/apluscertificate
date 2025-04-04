@@ -9,17 +9,15 @@
     --golden: #D4AF37;
     --grey: #4A4A4A;
     --light-grey: #f5f5f5;
-    --gradient: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
 }
 
 body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    background: var(--grey);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    color: var(--grey);
 }
 
 .verify-button-container {
@@ -30,21 +28,21 @@ body {
 }
 
 .verify-btn {
-    background: var(--gradient);
-    color: white;
+    background: var(--golden);
+    color: var(--grey);
     border: none;
     padding: 12px 24px;
     border-radius: 30px;
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-weight: bold;
 }
 
 .verify-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
 }
 
 .container {
@@ -54,20 +52,14 @@ body {
 }
 
 .step {
-    background: rgba(255, 255, 255, 0.95);
+    background: white;
     padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
     border: 2px solid var(--golden);
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
-}
-
-.step:hover {
-    transform: translateY(-5px);
 }
 
 .form-header {
@@ -75,64 +67,57 @@ body {
 }
 
 .form-header .logo {
-    width: 180px;
-    height: 180px;
+    width: 150px;
+    height: 150px;
     margin-bottom: 20px;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
 }
 
 .form-header h1 {
     color: var(--grey);
-    font-size: 36px;
+    font-size: 32px;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-header p {
     color: var(--golden);
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 18px;
 }
 
 .form-content {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
 }
 
 input[type="text"] {
-    padding: 18px 25px;
+    padding: 15px 20px;
     border: 2px solid var(--golden);
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 16px;
     width: 100%;
     transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.9);
 }
 
 input[type="text"]:focus {
     outline: none;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 button {
-    padding: 18px 35px;
+    padding: 15px 30px;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     transition: all 0.3s ease;
-    background: var(--gradient);
-    color: white;
+    background: var(--golden);
+    color: var(--grey);
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
 }
 
 button.secondary {
@@ -144,20 +129,17 @@ button.secondary {
     color: var(--grey);
     font-size: 14px;
     margin-top: 10px;
-    opacity: 0.8;
 }
 
 /* Certificate Styles */
 .certificate {
     background: white;
-    width: 210mm;
-    height: 297mm;
+    width: 210mm;  /* A4 width */
+    height: 297mm; /* A4 height */
     position: relative;
     padding: 40px;
     margin: 0 auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 .border-design {
@@ -167,7 +149,6 @@ button.secondary {
     right: 20px;
     bottom: 20px;
     border: 2px solid var(--golden);
-    border-radius: 5px;
 }
 
 .border-design::before {
@@ -178,7 +159,6 @@ button.secondary {
     right: -10px;
     bottom: -10px;
     border: 1px solid var(--golden);
-    border-radius: 8px;
 }
 
 .certificate-content {
@@ -189,108 +169,48 @@ button.secondary {
 }
 
 .cert-logo {
-    width: 180px;
-    height: 180px;
+    width: 150px;
+    height: 150px;
     margin-bottom: 30px;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.star-icon {
-    font-size: 48px;
-    color: var(--golden);
-    margin: 0 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    transform: rotate(0deg);
-    animation: starRotate 20s linear infinite;
-}
-
-@keyframes starRotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.certificate-header {
-    position: relative;
-    margin-bottom: 40px;
-}
-
-.certificate-header::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 2px;
-    background: var(--gradient);
 }
 
 .certificate-header h1 {
-    font-size: 42px;
+    font-size: 36px;
     color: var(--grey);
     margin-bottom: 40px;
     letter-spacing: 4px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .old-english {
     font-family: 'Old English Text MT', serif;
-    font-size: 82px;
+    font-size: 72px;
     color: var(--golden);
     margin-bottom: 10px;
     font-weight: normal;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .certificate-body h3 {
-    font-size: 28px;
+    font-size: 24px;
     color: var(--grey);
     margin-bottom: 40px;
     letter-spacing: 6px;
 }
 
 .presented-text {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--grey);
     margin-bottom: 20px;
     letter-spacing: 2px;
 }
 
-.recipient-name-container {
-    position: relative;
-    display: inline-block;
-    margin: 30px 0;
-}
-
-.name-star {
-    position: absolute;
-    top: -25px;
-    left: -30px;
-    width: 40px;
-    height: 40px;
-    background: var(--golden);
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    transform: rotate(-15deg);
-}
-
 .recipient-name {
-    font-size: 52px;
+    font-size: 48px;
     color: var(--golden);
     margin: 30px 0;
     font-family: 'Dancing Script', cursive;
     padding-bottom: 10px;
     display: inline-block;
-    border-bottom: 2px solid var(--golden);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--golden);
 }
 
 .achievement-text {
@@ -300,7 +220,7 @@ button.secondary {
 
 .achievement-text p {
     color: var(--grey);
-    font-size: 20px;
+    font-size: 18px;
     margin: 10px 0;
 }
 
@@ -318,43 +238,40 @@ button.secondary {
 }
 
 .signature-divider {
-    font-size: 32px;
+    font-size: 24px;
     color: var(--golden);
     margin: 0 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .signature-text {
     font-family: 'Dancing Script', cursive;
-    font-size: 36px;
+    font-size: 32px;
     color: var(--grey);
     margin-bottom: 10px;
 }
 
 .signature-line {
     width: 100%;
-    height: 2px;
-    background: var(--gradient);
+    height: 1px;
+    background-color: var(--golden);
     margin-bottom: 10px;
 }
 
 .signature .name {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--grey);
     margin-bottom: 5px;
-    font-weight: bold;
 }
 
 .signature .title {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--golden);
-    font-weight: 500;
 }
 
 .certificate-info {
     text-align: center;
     color: var(--grey);
-    font-size: 16px;
+    font-size: 14px;
     margin-top: 30px;
 }
 
@@ -368,19 +285,24 @@ button.secondary {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 18px 45px;
-    border-radius: 12px;
-    font-size: 20px;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 18px;
     font-weight: 500;
     transition: all 0.3s ease;
-    background: var(--gradient);
-    color: white;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    background: var(--golden);
+    color: var(--grey);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .download-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
+}
+
+.download-icon {
+    width: 24px;
+    height: 24px;
 }
 
 /* Modal Styles */
@@ -391,22 +313,20 @@ button.secondary {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    backdrop-filter: blur(5px);
 }
 
 .modal-content {
-    background: rgba(255, 255, 255, 0.95);
+    background: white;
     margin: 15% auto;
     padding: 40px;
-    border-radius: 20px;
+    border-radius: 15px;
     width: 90%;
     max-width: 500px;
     position: relative;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--golden);
-    backdrop-filter: blur(10px);
 }
 
 .close {
@@ -416,50 +336,22 @@ button.secondary {
     font-size: 28px;
     cursor: pointer;
     color: var(--grey);
-    transition: all 0.3s ease;
-}
-
-.close:hover {
-    color: var(--golden);
-    transform: scale(1.1);
 }
 
 #verificationResult {
     margin-top: 20px;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 8px;
     text-align: center;
 }
 
 #verificationResult.success {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-    border: 1px solid #28a745;
-    padding: 15px 20px;
-    border-radius: 12px;
-    font-weight: 500;
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.verification-icon {
-    font-size: 24px;
-    margin-right: 10px;
-    vertical-align: middle;
+    background-color: rgba(212, 175, 55, 0.1);
+    color: var(--grey);
+    border: 1px solid var(--golden);
 }
 
 #verificationResult.error {
-    background: rgba(220, 53, 69, 0.1);
+    background-color: #f8d7da;
     color: #721c24;
-    border: 1px solid #dc3545;
 } 
