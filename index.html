@@ -16,22 +16,39 @@
 
     <div class="container">
         <div class="step" id="step1">
-            <h2>Enter Your Details</h2>
+            <h2>Enter Your Name</h2>
             <input type="text" id="name" placeholder="Your Full Name" required>
-            <input type="text" id="telegramId" placeholder="Your Telegram ID" required>
-            <button onclick="nextStep(1)">Next</button>
+            <div class="button-group">
+                <button class="back-btn" onclick="previousStep(1)" style="display: none;">Back</button>
+                <button onclick="nextStep(1)">Next</button>
+            </div>
         </div>
 
         <div class="step" id="step2" style="display: none;">
-            <h2>Verify Telegram Membership</h2>
-            <p>Please verify that you are a member of our Telegram group.</p>
-            <button onclick="verifyTelegramMembership()">Verify Membership</button>
+            <h2>Enter Your Telegram ID</h2>
+            <input type="text" id="telegramId" placeholder="Your Telegram ID" required>
+            <div class="button-group">
+                <button class="back-btn" onclick="previousStep(2)">Back</button>
+                <button onclick="nextStep(2)">Next</button>
+            </div>
         </div>
 
         <div class="step" id="step3" style="display: none;">
+            <h2>Verify Telegram Membership</h2>
+            <p>Please verify that you are a member of our Telegram group.</p>
+            <div class="button-group">
+                <button class="back-btn" onclick="previousStep(3)">Back</button>
+                <button onclick="verifyTelegramMembership()">Verify Membership</button>
+            </div>
+        </div>
+
+        <div class="step" id="step4" style="display: none;">
             <h2>Generate Certificate</h2>
             <p>Click the button below to generate your certificate.</p>
-            <button onclick="generateCertificate()">Generate Certificate</button>
+            <div class="button-group">
+                <button class="back-btn" onclick="previousStep(4)">Back</button>
+                <button onclick="generateCertificate()">Generate Certificate</button>
+            </div>
         </div>
 
         <div class="certificate-container" id="certificateContainer" style="display: none;">

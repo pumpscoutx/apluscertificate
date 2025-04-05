@@ -125,64 +125,34 @@ async function verifyTelegramMembership(telegramId) {
     }
 }
 
-function nextStep(step) {
-    if (step === 1) {
-        const name = document.getElementById('nameInput').value.trim();
+function nextStep(currentStep) {
+    const currentStepElement = document.getElementById(`step${currentStep}`);
+    const nextStepElement = document.getElementById(`step${currentStep + 1}`);
+    
+    if (currentStep === 1) {
+        const name = document.getElementById('name').value.trim();
         if (!name) {
             alert('Please enter your name');
             return;
         }
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        currentStep = 2;
-    }
-    
-    else if (step === 2) {
-        const telegramId = document.getElementById('telegramInput').value.trim();
-        const name = document.getElementById('nameInput').value.trim();
-        
+    } else if (currentStep === 2) {
+        const telegramId = document.getElementById('telegramId').value.trim();
         if (!telegramId) {
             alert('Please enter your Telegram ID');
             return;
         }
-
-        if (usedTelegramIds.has(telegramId)) {
-            alert('This Telegram ID has already generated a certificate.');
-            return;
-        }
-
-        // Show loading state
-        const button = document.querySelector('#step2 button:last-child');
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-
-        // Verify membership
-        verifyTelegramMembership(telegramId)
-            .then(isMember => {
-                if (isMember) {
-                    generateCertificate(name, telegramId);
-                    document.getElementById('step2').style.display = 'none';
-                    document.getElementById('step3').style.display = 'block';
-                    currentStep = 3;
-                    usedTelegramIds.add(telegramId);
-                }
-            })
-            .catch(error => {
-                alert(error.message || 'Failed to verify membership. Please try again.');
-            })
-            .finally(() => {
-                // Reset button state
-                button.disabled = false;
-                button.textContent = originalText;
-            });
     }
+    
+    currentStepElement.style.display = 'none';
+    nextStepElement.style.display = 'block';
 }
 
-function previousStep(step) {
-    document.getElementById(`step${step}`).style.display = 'none';
-    document.getElementById(`step${step - 1}`).style.display = 'block';
-    currentStep = step - 1;
+function previousStep(currentStep) {
+    const currentStepElement = document.getElementById(`step${currentStep}`);
+    const previousStepElement = document.getElementById(`step${currentStep - 1}`);
+    
+    currentStepElement.style.display = 'none';
+    previousStepElement.style.display = 'block';
 }
 
 function generateCertificate(name, telegramId) {
