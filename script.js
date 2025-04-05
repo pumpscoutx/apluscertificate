@@ -1,4 +1,3 @@
-// Store verified certificates
 let verifiedCertificates = new Map();
 let usedTelegramIds = new Set();
 
@@ -319,4 +318,4 @@ document.addEventListener('keypress', function(e) {
         e.preventDefault();
         return false;
     }
-}); 
+});
