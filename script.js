@@ -71,7 +71,56 @@ function generateCertificateId() {
            Math.random().toString(36).substring(2, 7).toUpperCase();
 }
 
-// Handle multi-step form navigation
+async function verifyTelegramMembership(telegramId) {
+    try {
+        console.log('Verifying membership for ID:', telegramId);
+        
+        // Check if the ID is valid
+        if (!telegramId || isNaN(telegramId)) {
+            throw new Error('Please enter a valid Telegram ID (numbers only)');
+        }
+
+        const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
+        const params = new URLSearchParams({
+            chat_id: GROUP_ID,
+            user_id: telegramId
+        });
+
+        console.log('Making API request to verify membership...');
+        const response = await fetch(`${apiUrl}?${params}`);
+        const data = await response.json();
+        
+        console.log('API Response:', data);
+        
+        if (!data.ok) {
+            if (data.description.includes('user not found')) {
+                throw new Error('Invalid Telegram ID. Please make sure you entered the correct ID from @userinfobot.');
+            }
+            if (data.description.includes('chat not found')) {
+                throw new Error('Unable to verify group membership. Please contact administrator.');
+            }
+            throw new Error(data.description);
+        }
+
+        if (!data.result || !data.result.status) {
+            throw new Error('Unable to verify membership status.');
+        }
+
+        const status = data.result.status;
+        console.log('Member status:', status);
+        
+        // Only allow active members
+        if (status !== 'member' && status !== 'administrator' && status !== 'creator') {
+            throw new Error('You must be an active member of the A+ Tutorial Class group to generate a certificate.');
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Verification error:', error);
+        throw error;
+    }
+}
+
 function nextStep(step) {
     if (step === 1) {
         const name = document.getElementById('nameInput').value.trim();
@@ -113,78 +162,16 @@ function nextStep(step) {
                     document.getElementById('step3').style.display = 'block';
                     currentStep = 3;
                     usedTelegramIds.add(telegramId);
-                } else {
-                    alert('Verification failed. Please make sure:\n\n1. You are a member of our Telegram group\n2. You entered the correct Telegram ID\n3. The ID is from the account that joined the group');
                 }
             })
             .catch(error => {
-                console.error('Verification error:', error);
-                alert('Error: ' + (error.message || 'Failed to verify membership. Please try again or contact support.'));
+                alert(error.message || 'Failed to verify membership. Please try again.');
             })
             .finally(() => {
                 // Reset button state
                 button.disabled = false;
                 button.textContent = originalText;
             });
-    }
-}
-
-async function verifyTelegramMembership(telegramId) {
-    try {
-        console.log('Attempting to verify membership for ID:', telegramId);
-        
-        // Use the working group ID if found during test
-        const currentGroupId = window.GROUP_ID || GROUP_ID;
-        
-        // First, verify the group exists
-        const groupCheckResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${currentGroupId}`);
-        const groupData = await groupCheckResponse.json();
-        
-        if (!groupData.ok) {
-            throw new Error('Unable to access group. Please contact administrator.');
-        }
-        
-        console.log('Checking membership in group:', groupData.result.title);
-        
-        // Now check membership
-        const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
-        const params = new URLSearchParams({
-            chat_id: currentGroupId,
-            user_id: telegramId
-        });
-
-        const response = await fetch(`${apiUrl}?${params}`);
-        const data = await response.json();
-        
-        console.log('Membership check response:', JSON.stringify(data, null, 2));
-        
-        if (!data.ok) {
-            if (data.description.includes('user not found')) {
-                throw new Error('Invalid Telegram ID. Please make sure you entered the correct ID.');
-            }
-            throw new Error(data.description || 'Failed to verify membership');
-        }
-
-        if (data.ok && data.result) {
-            const status = data.result.status;
-            console.log('Member status:', status);
-            
-            // Valid member statuses
-            const validStatuses = ['member', 'administrator', 'creator'];
-            const isValid = validStatuses.includes(status);
-            
-            if (!isValid) {
-                throw new Error('You are not currently a member of the group. Please join the group first.');
-            }
-            
-            console.log('Membership verified successfully');
-            return true;
-        }
-        
-        return false;
-    } catch (error) {
-        console.error('Verification error:', error);
-        throw error;
     }
 }
 
