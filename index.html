@@ -6,6 +6,7 @@
     <title>A+ Certificate Generator</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Old+English+Text+MT&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -14,13 +15,13 @@
         <div id="step1" class="step">
             <h2>Enter Your Name</h2>
             <input type="text" id="nameInput" placeholder="Full Name">
-            <button onclick="nextStep()">Next</button>
+            <button onclick="nextStep(1)">Next</button>
         </div>
 
         <div id="step2" class="step" style="display: none;">
             <h2>Enter Your Telegram ID</h2>
             <input type="text" id="telegramInput" placeholder="Telegram ID">
-            <button onclick="nextStep()">Next</button>
+            <button onclick="nextStep(2)">Next</button>
         </div>
 
         <div id="step3" class="step" style="display: none;">
@@ -34,7 +35,7 @@
                     
                     <div class="certificate-body">
                         <p class="recipient-intro">This is to certify that</p>
-                        <h2 class="recipient-name">Daniel Thomas</h2>
+                        <h2 class="recipient-name" id="certificateName">Daniel Thomas</h2>
                         <p class="achievement-text">
                             has successfully completed the comprehensive training program and demonstrated 
                             exceptional proficiency in the field of professional development. Through dedication 
@@ -55,20 +56,28 @@
                                 <p class="signature-title">Operations Manager</p>
                             </div>
                         </div>
+                        
+                        <div class="certificate-footer">
+                            <p>Issued on: <span id="certificateDate"></span></p>
+                            <p>Certificate ID: <span id="certificateId"></span></p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="download-buttons">
-                <button onclick="downloadAsPDF()">Download as PDF</button>
-                <button onclick="downloadAsImage()">Download as Image</button>
+                <button onclick="downloadCertificate('pdf')">Download as PDF</button>
+                <button onclick="downloadCertificate('image')">Download as Image</button>
             </div>
         </div>
 
-        <div id="verify" class="step" style="display: none;">
-            <h2>Verify Certificate</h2>
-            <input type="text" id="verifyInput" placeholder="Enter Certificate ID">
-            <button onclick="verifyCertificate()">Verify</button>
-            <div id="verificationResult"></div>
+        <div id="verificationModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeVerificationModal()">&times;</span>
+                <h2>Verify Certificate</h2>
+                <input type="text" id="verifyCertId" placeholder="Enter Certificate ID">
+                <button onclick="verifyCertificate()">Verify</button>
+                <div id="verificationResult"></div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
