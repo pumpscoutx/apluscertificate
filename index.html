@@ -3,95 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A+ Certificate Generator</title>
+    <title>A+ Tutorial Class Certificate Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Old+English+Text+MT&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="verify-button-container">
         <button class="verify-btn" onclick="showVerificationModal()">
-            <i class="fas fa-shield-alt"></i> Verify Certificate
+            <i class="fas fa-check-circle"></i> Verify Certificate
         </button>
     </div>
 
     <div class="container">
-        <div id="step1" class="step">
-            <h2>Enter Your Name</h2>
-            <input type="text" id="nameInput" placeholder="Full Name">
+        <div class="step" id="step1">
+            <h2>Enter Your Details</h2>
+            <input type="text" id="name" placeholder="Your Full Name" required>
+            <input type="text" id="telegramId" placeholder="Your Telegram ID" required>
             <button onclick="nextStep(1)">Next</button>
         </div>
 
-        <div id="step2" class="step" style="display: none;">
-            <h2>Enter Your Telegram ID</h2>
-            <input type="text" id="telegramInput" placeholder="Telegram ID">
-            <button onclick="nextStep(2)">Next</button>
+        <div class="step" id="step2" style="display: none;">
+            <h2>Verify Telegram Membership</h2>
+            <p>Please verify that you are a member of our Telegram group.</p>
+            <button onclick="verifyTelegramMembership()">Verify Membership</button>
         </div>
 
-        <div id="step3" class="step" style="display: none;">
-            <div class="certificate">
+        <div class="step" id="step3" style="display: none;">
+            <h2>Generate Certificate</h2>
+            <p>Click the button below to generate your certificate.</p>
+            <button onclick="generateCertificate()">Generate Certificate</button>
+        </div>
+
+        <div class="certificate-container" id="certificateContainer" style="display: none;">
+            <div class="certificate" id="certificate">
                 <div class="certificate-content">
                     <div class="certificate-header">
-                        <img src="logo.svg" alt="A+ Logo" class="logo">
-                        <h1 class="old-english">Certificate</h1>
-                        <h2>of Achievement</h2>
+                        <h1 class="old-english">A+ Tutorial Class</h1>
+                        <p class="certificate-title">Certificate of Achievement</p>
                     </div>
                     
                     <div class="certificate-body">
                         <p class="recipient-intro">This is to certify that</p>
-                        <h2 class="recipient-name" id="certificateName">Daniel Thomas</h2>
+                        <h2 class="recipient-name" id="certificateName"></h2>
                         <p class="achievement-text">
-                            has successfully completed the comprehensive training program and demonstrated 
-                            exceptional proficiency in the field of professional development. Through dedication 
-                            and commitment to excellence, the recipient has mastered essential skills and 
-                            knowledge required for success in today's competitive environment.
+                            has successfully completed the A+ Tutorial Class program, demonstrating exceptional dedication and commitment to learning. This achievement reflects their hard work and perseverance in mastering the course material.
                         </p>
+                        
+                        <div class="certificate-id">
+                            Certificate ID: <span id="certificateId"></span>
+                        </div>
                         
                         <div class="signatures">
                             <div class="signature">
-                                <p class="signature-name">Naol Getahun</p>
+                                <img src="signature1.png" alt="Signature" class="signature-image">
+                                <p class="signature-name">Daniel Thomas</p>
                                 <p class="signature-title">Executive Officer</p>
                             </div>
-                            <div class="signature-divider">
-                                <img src="medal.svg" alt="Medal" class="medal">
-                            </div>
+                            <div class="signature-divider"></div>
                             <div class="signature">
-                                <p class="signature-name">Daniel Tesfaye</p>
+                                <img src="signature2.png" alt="Signature" class="signature-image">
+                                <p class="signature-name">Daniel Thomas</p>
                                 <p class="signature-title">Operations Manager</p>
                             </div>
                         </div>
                         
                         <div class="certificate-footer">
-                            <p>Issued on: <span id="certificateDate"></span></p>
-                            <p>Certificate ID: <span id="certificateId"></span></p>
+                            <p>Issued on: <span id="issueDate"></span></p>
+                            <p class="verification-note">Verify this certificate at our website with Certificate ID</p>
                         </div>
                     </div>
                 </div>
             </div>
+            
             <div class="download-buttons">
                 <button onclick="downloadCertificate('pdf')">
-                    <i class="fas fa-file-pdf"></i> Download as PDF
+                    <i class="fas fa-file-pdf"></i> Download PDF
                 </button>
                 <button onclick="downloadCertificate('image')">
-                    <i class="fas fa-image"></i> Download as Image
+                    <i class="fas fa-image"></i> Download Image
                 </button>
-            </div>
-        </div>
-
-        <div id="verificationModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <span class="close" onclick="closeVerificationModal()">&times;</span>
-                <h2>Verify Certificate</h2>
-                <input type="text" id="verifyCertId" placeholder="Enter Certificate ID">
-                <button onclick="verifyCertificate()">
-                    <i class="fas fa-check"></i> Verify
-                </button>
-                <div id="verificationResult"></div>
             </div>
         </div>
     </div>
+
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeVerificationModal()">&times;</span>
+            <h2>Verify Certificate</h2>
+            <input type="text" id="verifyCertificateId" placeholder="Enter Certificate ID">
+            <button onclick="verifyCertificate()">Verify</button>
+            <div id="verificationResult"></div>
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
