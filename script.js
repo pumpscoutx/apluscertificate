@@ -135,16 +135,18 @@ function nextStep(currentStep) {
             alert('Please enter your name');
             return;
         }
+        currentStepElement.style.display = 'none';
+        nextStepElement.style.display = 'block';
     } else if (currentStep === 2) {
         const telegramId = document.getElementById('telegramId').value.trim();
         if (!telegramId) {
             alert('Please enter your Telegram ID');
             return;
         }
+        // Skip verification and go directly to certificate generation
+        currentStepElement.style.display = 'none';
+        document.getElementById('step4').style.display = 'block';
     }
-    
-    currentStepElement.style.display = 'none';
-    nextStepElement.style.display = 'block';
 }
 
 function previousStep(currentStep) {
@@ -183,11 +185,8 @@ function generateCertificate(name, telegramId) {
 document.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        if (currentStep === 1) {
-            nextStep(1);
-        } else if (currentStep === 2) {
-            nextStep(2);
-        }
+        const currentStep = document.querySelector('.step[style="display: block;"]').id.replace('step', '');
+        nextStep(parseInt(currentStep));
     }
 });
 
