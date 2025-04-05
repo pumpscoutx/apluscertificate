@@ -79,6 +79,11 @@ async function verifyTelegramMembership(telegramId) {
             throw new Error('Please enter a valid Telegram ID (numbers only)');
         }
 
+        // Check if ID has already been used
+        if (usedTelegramIds.has(telegramId)) {
+            throw new Error('This Telegram ID has already generated a certificate.');
+        }
+
         // Check member status
         const memberUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
         const memberParams = new URLSearchParams({
@@ -117,6 +122,8 @@ async function verifyTelegramMembership(telegramId) {
             throw new Error('You must be an active member of the A+ Tutorial Class group to generate a certificate.');
         }
 
+        // Add to used IDs
+        usedTelegramIds.add(telegramId);
         console.log('Membership verified successfully');
         return true;
     } catch (error) {
@@ -140,14 +147,28 @@ function nextStep(currentStep) {
             alert('Please enter your Telegram ID');
             return;
         }
-        
-        // Generate certificate immediately
-        const name = document.getElementById('name').value.trim();
-        generateCertificate(name, telegramId);
-        
-        // Hide all steps and show certificate
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('certificateContainer').style.display = 'block';
+
+        // Show loading state
+        const button = document.querySelector('#step2 button:last-child');
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+        // Verify membership
+        verifyTelegramMembership(telegramId)
+            .then(isMember => {
+                if (isMember) {
+                    const name = document.getElementById('name').value.trim();
+                    generateCertificate(name, telegramId);
+                    document.getElementById('step2').style.display = 'none';
+                    document.getElementById('certificateContainer').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                alert(error.message || 'Failed to verify membership. Please try again.');
+                button.disabled = false;
+                button.textContent = originalText;
+            });
     }
 }
 
