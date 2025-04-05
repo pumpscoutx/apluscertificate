@@ -4,7 +4,7 @@ let usedTelegramIds = new Set();
 
 // Telegram Bot Token
 const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
-const GROUP_ID = '-1002123456789'; // Replace with your group ID
+const GROUP_ID = '-1002087855584'; // A+ Tutorial Class group ID
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -42,7 +42,7 @@ function nextStep(step) {
         }
 
         // Show loading state
-        const button = document.querySelector('#step2 button');
+        const button = document.querySelector('#step2 button:last-child');
         const originalText = button.textContent;
         button.disabled = true;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
@@ -61,7 +61,7 @@ function nextStep(step) {
             })
             .catch(error => {
                 console.error('Verification error:', error);
-                alert('Error verifying membership. Please try again later.');
+                alert('Error verifying membership. Please try again later or contact support if the issue persists.');
             })
             .finally(() => {
                 // Reset button state
@@ -73,17 +73,24 @@ function nextStep(step) {
 
 async function verifyTelegramMembership(telegramId) {
     try {
+        console.log('Verifying membership for ID:', telegramId);
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${GROUP_ID}&user_id=${telegramId}`);
         const data = await response.json();
         
+        console.log('Telegram API response:', data);
+        
         if (data.ok && data.result) {
             const status = data.result.status;
-            return status === 'member' || status === 'administrator' || status === 'creator';
+            const isValid = status === 'member' || status === 'administrator' || status === 'creator';
+            console.log('Member status:', status, 'Is valid:', isValid);
+            return isValid;
         }
+        
+        console.log('Invalid response:', data);
         return false;
     } catch (error) {
         console.error('Telegram API error:', error);
-        return false;
+        throw new Error('Failed to verify membership. Please try again.');
     }
 }
 
