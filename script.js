@@ -4,8 +4,8 @@ let usedTelegramIds = new Set();
 const knownMembers = ['8012293640'];
 
 // Telegram Bot Token
-const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
-const GROUP_ID = '-1002570633428'; // Private group ID with -100 prefix
+const TELEGRAM_BOT_TOKEN = '6887558491:AAEcgDhEEXTZxZPTJEGDxTBZxhXhgPQwTxE';
+const GROUP_ID = '-2570633428';
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -14,7 +14,7 @@ window.jsPDF = window.jspdf.jsPDF;
 async function testGroupAccess() {
     try {
         // First test if bot is working
-        const botResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getMe`);
+        const botResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe`);
         const botData = await botResponse.json();
         
         if (!botData.ok) {
@@ -25,7 +25,7 @@ async function testGroupAccess() {
         console.log('Bot connected successfully:', botData.result.first_name);
         
         // Now test group access with original ID
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
         const data = await response.json();
         
         if (!data.ok) {
@@ -34,7 +34,7 @@ async function testGroupAccess() {
             const alternativeGroupId = `-100${GROUP_ID.replace('-', '')}`;
             console.log('Trying alternative group ID:', alternativeGroupId);
             
-            const altResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${alternativeGroupId}`);
+            const altResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=${alternativeGroupId}`);
             const altData = await altResponse.json();
             
             if (altData.ok) {
@@ -45,7 +45,7 @@ async function testGroupAccess() {
                 const basicId = GROUP_ID.replace('-', '');
                 console.log('Trying basic ID:', basicId);
                 
-                const basicResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=-${basicId}`);
+                const basicResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=-${basicId}`);
                 const basicData = await basicResponse.json();
                 
                 if (basicData.ok) {
@@ -68,61 +68,22 @@ async function testGroupAccess() {
 document.addEventListener('DOMContentLoaded', testGroupAccess);
 
 function generateCertificateId() {
-    return 'CERT-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    return 'APT-' + Date.now().toString(36).toUpperCase() + 
+           Math.random().toString(36).substring(2, 7).toUpperCase();
 }
 
-async function verifyTelegramMembership(telegramId) {
+async function verifyTelegramMembership(userId) {
     try {
-        console.log('Starting verification for ID:', telegramId);
-        
-        // Check if the ID is valid
-        if (!telegramId || isNaN(telegramId)) {
-            throw new Error('Please enter a valid Telegram ID (numbers only)');
-        }
-
-        // Check member status
-        const memberUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
-        const memberParams = new URLSearchParams({
-            chat_id: GROUP_ID,
-            user_id: telegramId
-        });
-
-        console.log('Checking member status...');
-        console.log('Using group ID:', GROUP_ID);
-        console.log('User ID:', telegramId);
-        
-        const response = await fetch(`${memberUrl}?${memberParams}`);
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChatMember?chat_id=${GROUP_ID}&user_id=${userId}`);
         const data = await response.json();
         
-        console.log('Member check response:', data);
-        
-        if (!data.ok) {
-            if (data.description.includes('user not found')) {
-                throw new Error('Invalid Telegram ID. Please make sure you entered the correct ID from @userinfobot.');
-            }
-            if (data.description.includes('chat not found')) {
-                throw new Error('Unable to verify group membership. Please contact administrator.');
-            }
-            throw new Error(data.description || 'Failed to verify membership');
+        if (data.ok && data.result && ['creator', 'administrator', 'member'].includes(data.result.status)) {
+            return true;
+        } else {
+            throw new Error('User is not a member of the group');
         }
-
-        if (!data.result || !data.result.status) {
-            throw new Error('Unable to verify membership status.');
-        }
-
-        const status = data.result.status;
-        console.log('Member status:', status);
-        
-        // Only allow active members
-        if (status !== 'member' && status !== 'administrator' && status !== 'creator') {
-            throw new Error('You must be an active member of the A+ Tutorial Class group to generate a certificate.');
-        }
-
-        console.log('Membership verified successfully');
-        return true;
     } catch (error) {
-        console.error('Verification error:', error);
-        throw error;
+        throw new Error('Failed to verify membership. Please make sure you are a member of our Telegram group.');
     }
 }
 
@@ -140,38 +101,52 @@ function nextStep() {
         document.getElementById('step2').style.display = 'block';
     } else if (currentStepNumber === 2) {
         const telegramId = document.getElementById('telegramInput').value.trim();
+        const name = document.getElementById('nameInput').value.trim();
+        
         if (!telegramId) {
             alert('Please enter your Telegram ID');
             return;
         }
         
         if (usedTelegramIds.has(telegramId)) {
-            alert('This Telegram ID has already generated a certificate');
+            alert('This Telegram ID has already generated a certificate.');
             return;
         }
         
-        if (!knownMembers.includes(telegramId)) {
-            alert('Invalid Telegram ID. Please check your ID and try again.');
-            return;
-        }
-        
-        // Mark this ID as used
-        usedTelegramIds.add(telegramId);
-        
-        // Update certificate with user's name
-        const name = document.getElementById('nameInput').value.trim();
-        document.querySelector('.recipient-name').textContent = name;
-        
-        // Generate and display certificate ID
-        const certificateId = generateCertificateId();
-        localStorage.setItem(certificateId, JSON.stringify({
-            name: name,
-            telegramId: telegramId,
-            date: new Date().toISOString()
-        }));
-        
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'block';
+        // Show loading state
+        const button = document.querySelector('#step2 button:last-child');
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+        // Verify membership
+        verifyTelegramMembership(telegramId)
+            .then(isMember => {
+                if (isMember) {
+                    // Update certificate with user's name
+                    document.querySelector('.recipient-name').textContent = name;
+                    
+                    // Generate and store certificate data
+                    const certificateId = generateCertificateId();
+                    localStorage.setItem(certificateId, JSON.stringify({
+                        name: name,
+                        telegramId: telegramId,
+                        date: new Date().toISOString()
+                    }));
+                    
+                    document.getElementById('step2').style.display = 'none';
+                    document.getElementById('step3').style.display = 'block';
+                    usedTelegramIds.add(telegramId);
+                }
+            })
+            .catch(error => {
+                alert(error.message || 'Failed to verify membership. Please try again.');
+            })
+            .finally(() => {
+                // Reset button state
+                button.disabled = false;
+                button.textContent = originalText;
+            });
     }
 }
 
@@ -217,54 +192,43 @@ document.addEventListener('keypress', function(e) {
     }
 });
 
-async function downloadCertificate(format) {
+async function downloadAsPDF() {
     const certificate = document.querySelector('.certificate');
-    const scale = 2; // Increase quality
     
-    try {
-        const canvas = await html2canvas(certificate, {
-            scale: scale,
-            useCORS: true,
-            logging: false,
-            allowTaint: true,
-            backgroundColor: null
-        });
+    // Create canvas
+    const canvas = await html2canvas(certificate, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+    });
+    
+    // Create PDF
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+    
+    // Add image to PDF
+    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+    
+    // Download PDF
+    pdf.save('certificate.pdf');
+}
 
-        if (format === 'pdf') {
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4',
-                putOnlyUsedFonts: true,
-                floatPrecision: 16
-            });
-            
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            
-            // Add image
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            
-            // Add hidden text layer for copy-paste
-            const cert = verifiedCertificates.get(document.getElementById('certificateId').textContent);
-            pdf.setFontSize(12);
-            pdf.setTextColor(0, 0, 0);
-            pdf.text(`Certificate of Completion\n\nThis is to certify that\n${cert.name}\nhas successfully completed the A+ Tutorial Class program\n\nIssued on ${cert.date}\nCertificate ID: ${document.getElementById('certificateId').textContent}`, 10, 10, {
-                hidden: true
-            });
-            
-            pdf.save('A+_Tutorial_Certificate.pdf');
-        } else {
-            const link = document.createElement('a');
-            link.download = 'A+_Tutorial_Certificate.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-    } catch (error) {
-        console.error('Error generating certificate:', error);
-        alert('There was an error generating your certificate. Please try again.');
-    }
+async function downloadAsImage() {
+    const certificate = document.querySelector('.certificate');
+    
+    // Create canvas
+    const canvas = await html2canvas(certificate, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+    });
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.download = 'certificate.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
 }
 
 // Certificate verification functionality
