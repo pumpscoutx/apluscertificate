@@ -4,7 +4,7 @@ let usedTelegramIds = new Set();
 
 // Telegram Bot Token
 const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
-const GROUP_ID = '-1002087855584'; // A+ Tutorial Class group ID
+const GROUP_ID = '-2570633428'; // A+ Tutorial Class group ID
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -23,14 +23,14 @@ async function testGroupAccess() {
         
         console.log('Bot connected successfully:', botData.result.first_name);
         
-        // Now test group access
+        // Now test group access with original ID
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
         const data = await response.json();
         
         if (!data.ok) {
             console.error('Group ID Error:', data.description);
-            // Try alternative group ID format
-            const alternativeGroupId = GROUP_ID.replace('-1002', '-100');
+            // Try with -100 prefix
+            const alternativeGroupId = `-100${GROUP_ID.replace('-', '')}`;
             console.log('Trying alternative group ID:', alternativeGroupId);
             
             const altResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${alternativeGroupId}`);
@@ -40,7 +40,19 @@ async function testGroupAccess() {
                 console.log('Found group with alternative ID:', altData.result.title);
                 window.GROUP_ID = alternativeGroupId; // Store working group ID
             } else {
-                console.error('Alternative group ID also failed:', altData.description);
+                // Try without any prefix
+                const basicId = GROUP_ID.replace('-', '');
+                console.log('Trying basic ID:', basicId);
+                
+                const basicResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=-${basicId}`);
+                const basicData = await basicResponse.json();
+                
+                if (basicData.ok) {
+                    console.log('Found group with basic ID:', basicData.result.title);
+                    window.GROUP_ID = `-${basicId}`; // Store working group ID
+                } else {
+                    console.error('All group ID formats failed');
+                }
             }
         } else {
             console.log('Group found:', data.result.title);
