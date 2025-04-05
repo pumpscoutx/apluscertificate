@@ -2,100 +2,128 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 :root {
-    --golden: #D4AF37;
-    --grey: #4A4A4A;
-    --light-grey: #f5f5f5;
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --accent: #e74c3c;
+    --gold: #D4AF37;
+    --light: #ecf0f1;
+    --dark: #2c3e50;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f5f5f5;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 2rem;
 }
 
 .verify-button-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 100;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
 }
 
 .verify-btn {
-    background: var(--golden);
-    color: var(--grey);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    background: var(--accent);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .verify-btn:hover {
+    background: #c0392b;
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 2rem;
 }
 
 .step {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.step:hover {
+    transform: translateY(-5px);
+}
+
+.step h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
     text-align: center;
-    margin-bottom: 30px;
 }
 
 input {
-    padding: 12px 20px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 300px;
-    font-size: 16px;
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--secondary);
 }
 
 button {
-    background-color: var(--golden);
+    background: var(--secondary);
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 4px;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-weight: 600;
 }
 
 button:hover {
-    background-color: #B08F26;
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .certificate {
+    background: white;
     width: 210mm;
     height: 297mm;
-    margin: 0 auto 30px;
-    background: white;
-    padding: 40px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     position: relative;
+    border-radius: 5px;
 }
 
 .certificate::before {
     content: '';
     position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    border: 2px solid var(--golden);
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    border: 2px solid var(--gold);
+    border-radius: 5px;
     pointer-events: none;
 }
 
@@ -105,24 +133,24 @@ button:hover {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
 }
 
 .certificate-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 2rem;
 }
 
 .logo {
     width: 120px;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
 .old-english {
     font-family: 'Old English Text MT', serif;
-    font-size: 64px;
-    color: var(--golden);
-    margin: 20px 0;
+    font-size: 3.5rem;
+    color: var(--gold);
+    margin: 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .certificate-body {
@@ -130,36 +158,37 @@ button:hover {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     max-width: 800px;
     margin: 0 auto;
 }
 
 .recipient-intro {
-    font-size: 24px;
-    color: var(--grey);
-    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
 }
 
 .recipient-name {
-    font-size: 48px;
-    color: var(--golden);
-    margin: 20px 0;
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin: 1.5rem 0;
+    font-weight: 600;
 }
 
 .achievement-text {
-    font-size: 18px;
-    line-height: 1.6;
-    color: var(--grey);
-    margin: 40px 0;
-    padding: 0 40px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--dark);
+    margin: 2rem 0;
+    padding: 0 2rem;
 }
 
 .signatures {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 60px;
+    margin-top: 3rem;
     width: 100%;
 }
 
@@ -169,250 +198,88 @@ button:hover {
 }
 
 .signature-name {
-    font-size: 24px;
-    color: var(--grey);
-    margin-bottom: 5px;
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 .signature-title {
-    font-size: 16px;
-    color: var(--golden);
+    font-size: 1rem;
+    color: var(--secondary);
 }
 
 .signature-divider {
-    margin: 0 40px;
+    margin: 0 2rem;
 }
 
 .medal {
     width: 60px;
     height: 60px;
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.certificate-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--dark);
+    padding: 1rem;
+    background: rgba(236, 240, 241, 0.5);
+    border-radius: 5px;
+    width: 100%;
 }
 
 .download-buttons {
     display: flex;
-    gap: 20px;
+    gap: 1rem;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 2rem;
+}
+
+.download-buttons button {
+    width: auto;
+    padding: 0.8rem 1.5rem;
 }
 
 @media (max-width: 768px) {
     .certificate {
         width: 100%;
         height: auto;
-        padding: 20px;
+        padding: 1rem;
     }
 
     .old-english {
-        font-size: 48px;
+        font-size: 2.5rem;
     }
 
     .recipient-name {
-        font-size: 36px;
+        font-size: 2rem;
     }
 
     .achievement-text {
-        font-size: 16px;
-        padding: 0 20px;
+        font-size: 1rem;
+        padding: 0 1rem;
     }
 
     .signatures {
         flex-direction: column;
-        gap: 20px;
+        gap: 1.5rem;
     }
 
     .signature-divider {
-        margin: 20px 0;
+        margin: 1rem 0;
     }
-}
 
-/* Certificate Styles */
-.certificate {
-    background: white;
-    width: 210mm;  /* A4 width */
-    height: 297mm; /* A4 height */
-    position: relative;
-    padding: 40px;
-    margin: 0 auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.border-design {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    border: 2px solid var(--golden);
-}
-
-.border-design::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border: 1px solid var(--golden);
-}
-
-.certificate-content {
-    position: relative;
-    z-index: 1;
-    padding: 60px;
-    text-align: center;
-}
-
-.cert-logo {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 30px;
-}
-
-.certificate-header h1 {
-    font-size: 36px;
-    color: var(--grey);
-    margin-bottom: 40px;
-    letter-spacing: 4px;
-}
-
-.old-english {
-    font-family: 'Old English Text MT', serif;
-    font-size: 72px;
-    color: var(--golden);
-    margin-bottom: 10px;
-    font-weight: normal;
-}
-
-.certificate-body h3 {
-    font-size: 24px;
-    color: var(--grey);
-    margin-bottom: 40px;
-    letter-spacing: 6px;
-}
-
-.presented-text {
-    font-size: 18px;
-    color: var(--grey);
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-}
-
-.recipient-name {
-    font-size: 48px;
-    color: var(--golden);
-    margin: 30px 0;
-    font-family: 'Dancing Script', cursive;
-    padding-bottom: 10px;
-    display: inline-block;
-    border-bottom: 1px solid var(--golden);
-}
-
-.achievement-text {
-    margin: 40px 0;
-    line-height: 2;
-}
-
-.achievement-text p {
-    color: var(--grey);
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-.signatures {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 60px;
-    margin-bottom: 40px;
-}
-
-.signature {
-    text-align: center;
-    width: 200px;
-}
-
-.signature-divider {
-    margin: 0 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.divider-star {
-    width: 48px;
-    height: 48px;
-    animation: starRotate 20s linear infinite;
-}
-
-@keyframes starRotate {
-    from {
-        transform: rotate(0deg);
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
     }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.signature-text {
-    font-family: 'Dancing Script', cursive;
-    font-size: 32px;
-    color: var(--grey);
-    margin-bottom: 10px;
-}
-
-.signature-line {
-    width: 100%;
-    height: 1px;
-    background-color: var(--golden);
-    margin-bottom: 10px;
-}
-
-.signature .name {
-    font-size: 18px;
-    color: var(--grey);
-    margin-bottom: 5px;
-}
-
-.signature .title {
-    font-size: 14px;
-    color: var(--golden);
-}
-
-.certificate-info {
-    text-align: center;
-    color: var(--grey);
-    font-size: 14px;
-    margin-top: 30px;
-}
-
-.download-options {
-    display: flex;
-    justify-content: center;
-    margin: 30px auto;
-}
-
-.download-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 40px;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    background: var(--golden);
-    color: var(--grey);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.download-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
-}
-
-.download-icon {
-    width: 24px;
-    height: 24px;
 }
 
 /* Modal Styles */
@@ -425,31 +292,56 @@ button:hover {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    backdrop-filter: blur(5px);
 }
 
 .modal-content {
     position: relative;
-    background-color: #fff;
+    background-color: white;
     margin: 15% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 80%;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .close {
     position: absolute;
-    right: 10px;
-    top: 5px;
-    font-size: 24px;
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.5rem;
     cursor: pointer;
+    color: var(--dark);
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--accent);
 }
 
 #verificationResult {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 4px;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 #verificationResult.success {
@@ -466,17 +358,6 @@ button:hover {
 
 .verification-note {
     font-size: 0.9rem;
-    margin-top: 10px;
+    margin-top: 0.5rem;
     font-style: italic;
-}
-
-.certificate-footer {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.certificate-footer p {
-    margin: 0.5rem 0;
 } 

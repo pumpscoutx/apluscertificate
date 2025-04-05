@@ -11,6 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+    <div class="verify-button-container">
+        <button class="verify-btn" onclick="showVerificationModal()">
+            <i class="fas fa-shield-alt"></i> Verify Certificate
+        </button>
+    </div>
+
     <div class="container">
         <div id="step1" class="step">
             <h2>Enter Your Name</h2>
@@ -65,8 +71,12 @@
                 </div>
             </div>
             <div class="download-buttons">
-                <button onclick="downloadCertificate('pdf')">Download as PDF</button>
-                <button onclick="downloadCertificate('image')">Download as Image</button>
+                <button onclick="downloadCertificate('pdf')">
+                    <i class="fas fa-file-pdf"></i> Download as PDF
+                </button>
+                <button onclick="downloadCertificate('image')">
+                    <i class="fas fa-image"></i> Download as Image
+                </button>
             </div>
         </div>
 
@@ -75,7 +85,9 @@
                 <span class="close" onclick="closeVerificationModal()">&times;</span>
                 <h2>Verify Certificate</h2>
                 <input type="text" id="verifyCertId" placeholder="Enter Certificate ID">
-                <button onclick="verifyCertificate()">Verify</button>
+                <button onclick="verifyCertificate()">
+                    <i class="fas fa-check"></i> Verify
+                </button>
                 <div id="verificationResult"></div>
             </div>
         </div>
