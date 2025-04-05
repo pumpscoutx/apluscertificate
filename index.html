@@ -31,59 +31,37 @@
         </div>
 
         <!-- Step 2: Telegram ID Input -->
-        <div class="step" id="step2" style="display: none;">
-            <div class="form-header">
-                <img src="https://looka.com/editor/85731660" alt="A+ Tutorial Class Logo" class="logo">
-                <h1>Verify Membership</h1>
-                <p>Enter your Telegram ID</p>
-            </div>
-            <div class="form-content">
-                <input type="text" id="telegramInput" placeholder="Enter your Telegram ID">
+        <div id="step2" class="form-step" style="display: none;">
+            <h2>Enter Your Telegram ID</h2>
+            <p class="info-text">Get your Telegram ID by messaging @userinfobot on Telegram</p>
+            <input type="text" id="telegramInput" placeholder="Enter your Telegram ID" required>
+            <div class="button-group">
+                <button onclick="previousStep(2)">Back</button>
                 <button onclick="nextStep(2)">Next</button>
-                <button class="secondary" onclick="previousStep(2)">Back</button>
-                <p class="help-text">Your Telegram ID is required to verify your membership</p>
             </div>
         </div>
 
         <!-- Step 3: Certificate Preview -->
-        <div class="step" id="step3" style="display: none;">
+        <div id="step3" class="form-step" style="display: none;">
             <div class="certificate">
-                <div class="border-design"></div>
-                <div class="certificate-content">
-                    <img src="https://looka.com/editor/85731660" alt="A+ Tutorial Class Logo" class="cert-logo">
-                    <div class="certificate-header">
-                        <h1>A+ TUTORIAL CLASS</h1>
-                        <div class="old-english">Certificate of Completion</div>
-                        <h3>EXCELLENCE IN EDUCATION</h3>
+                <img src="logo.png" alt="A+ Tutorial Class Logo" class="logo">
+                <h1>Certificate of Completion</h1>
+                <p class="recipient">This is to certify that</p>
+                <h2 id="certificateName" class="name"></h2>
+                <p class="description">has successfully completed the A+ Tutorial Class program</p>
+                <p class="date">Issued on <span id="certificateDate"></span></p>
+                <p class="certificate-id">Certificate ID: <span id="certificateId"></span></p>
+                <div class="signatures">
+                    <div class="signature">
+                        <p class="signature-name">Naol Getahun</p>
+                        <p class="signature-title">Executive Officer</p>
                     </div>
-                    <div class="certificate-body">
-                        <div class="presented-text">THIS CERTIFICATE IS PROUDLY PRESENTED TO</div>
-                        <div class="recipient-name" id="certificateName"></div>
-                        <div class="achievement-text">
-                            <p>For successfully completing the comprehensive tutorial program</p>
-                            <p>and demonstrating exceptional dedication to academic excellence</p>
-                        </div>
-                        <div class="signatures">
-                            <div class="signature">
-                                <div class="signature-text">Naol Getahun</div>
-                                <div class="signature-line"></div>
-                                <div class="name">Naol Getahun</div>
-                                <div class="title">Executive Officer</div>
-                            </div>
-                            <div class="signature-divider">
-                                <img src="star.svg" alt="Star" class="divider-star">
-                            </div>
-                            <div class="signature">
-                                <div class="signature-text">Daniel Thomas</div>
-                                <div class="signature-line"></div>
-                                <div class="name">Daniel Thomas</div>
-                                <div class="title">Operations Manager</div>
-                            </div>
-                        </div>
-                        <div class="certificate-info">
-                            <p>Certificate ID: <span id="certificateId"></span></p>
-                            <p>Date Issued: <span id="certificateDate"></span></p>
-                        </div>
+                    <div class="signature-divider">
+                        <img src="medal.svg" alt="Star" class="medal-icon">
+                    </div>
+                    <div class="signature">
+                        <p class="signature-name">Daniel Tesfaye</p>
+                        <p class="signature-title">Operations Manager</p>
                     </div>
                 </div>
             </div>

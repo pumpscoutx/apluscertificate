@@ -2,10 +2,9 @@
 let verifiedCertificates = new Map();
 let usedTelegramIds = new Set();
 
-// List of known member IDs
-const knownMembers = [
-    "8012293640"  // Known member ID
-];
+// Telegram Bot Token
+const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
+const GROUP_ID = '-1002123456789'; // Replace with your group ID
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -42,15 +41,49 @@ function nextStep(step) {
             return;
         }
 
-        // Generate certificate and show it if the ID matches
-        if (knownMembers.includes(telegramId)) {
-            generateCertificate(name, telegramId);
-            document.getElementById('step2').style.display = 'none';
-            document.getElementById('step3').style.display = 'block';
-            currentStep = 3;
-        } else {
-            alert('This Telegram ID is not recognized. Please verify your membership.');
+        // Show loading state
+        const button = document.querySelector('#step2 button');
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+        // Verify membership using Telegram Bot API
+        verifyTelegramMembership(telegramId)
+            .then(isMember => {
+                if (isMember) {
+                    generateCertificate(name, telegramId);
+                    document.getElementById('step2').style.display = 'none';
+                    document.getElementById('step3').style.display = 'block';
+                    currentStep = 3;
+                } else {
+                    alert('This Telegram ID is not a member of our group. Please join our Telegram group first.');
+                }
+            })
+            .catch(error => {
+                console.error('Verification error:', error);
+                alert('Error verifying membership. Please try again later.');
+            })
+            .finally(() => {
+                // Reset button state
+                button.disabled = false;
+                button.textContent = originalText;
+            });
+    }
+}
+
+async function verifyTelegramMembership(telegramId) {
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${GROUP_ID}&user_id=${telegramId}`);
+        const data = await response.json();
+        
+        if (data.ok && data.result) {
+            const status = data.result.status;
+            return status === 'member' || status === 'administrator' || status === 'creator';
         }
+        return false;
+    } catch (error) {
+        console.error('Telegram API error:', error);
+        return false;
     }
 }
 
@@ -87,6 +120,18 @@ function generateCertificate(name, telegramId) {
     usedTelegramIds.add(telegramId);
 }
 
+// Handle Enter key press
+document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentStep === 1) {
+            nextStep(1);
+        } else if (currentStep === 2) {
+            nextStep(2);
+        }
+    }
+});
+
 async function downloadCertificate(format) {
     const certificate = document.querySelector('.certificate');
     const scale = 2; // Increase quality
@@ -95,7 +140,9 @@ async function downloadCertificate(format) {
         const canvas = await html2canvas(certificate, {
             scale: scale,
             useCORS: true,
-            logging: false
+            logging: false,
+            allowTaint: true,
+            backgroundColor: null
         });
 
         if (format === 'pdf') {
@@ -103,13 +150,25 @@ async function downloadCertificate(format) {
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
-                format: 'a4'
+                format: 'a4',
+                putOnlyUsedFonts: true,
+                floatPrecision: 16
             });
             
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
             
+            // Add image
             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            
+            // Add hidden text layer for copy-paste
+            const cert = verifiedCertificates.get(document.getElementById('certificateId').textContent);
+            pdf.setFontSize(12);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(`Certificate of Completion\n\nThis is to certify that\n${cert.name}\nhas successfully completed the A+ Tutorial Class program\n\nIssued on ${cert.date}\nCertificate ID: ${document.getElementById('certificateId').textContent}`, 10, 10, {
+                hidden: true
+            });
+            
             pdf.save('A+_Tutorial_Certificate.pdf');
         } else {
             const link = document.createElement('a');

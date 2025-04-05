@@ -12,12 +12,14 @@
 }
 
 body {
-    background: var(--grey);
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
 }
 
 .verify-button-container {
@@ -46,89 +48,145 @@ body {
 }
 
 .container {
-    width: 100%;
     max-width: 1200px;
-    position: relative;
-}
-
-.step {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
     margin: 0 auto;
+    padding: 20px;
+}
+
+.form-step {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    border: 2px solid var(--golden);
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-.form-header {
-    margin-bottom: 40px;
+.info-text {
+    color: #666;
+    margin: 10px 0;
+    font-size: 0.9em;
 }
 
-.form-header .logo {
+.logo {
     width: 150px;
-    height: 150px;
+    height: auto;
     margin-bottom: 20px;
 }
 
-.form-header h1 {
-    color: var(--grey);
-    font-size: 32px;
-    margin-bottom: 10px;
+.certificate {
+    background: white;
+    width: 210mm;
+    height: 297mm;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    margin: 0 auto;
 }
 
-.form-header p {
-    color: var(--golden);
-    font-size: 18px;
+.certificate .logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 30px;
 }
 
-.form-content {
+.medal-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 20px;
+}
+
+.signatures {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
     gap: 20px;
 }
 
-input[type="text"] {
-    padding: 15px 20px;
-    border: 2px solid var(--golden);
-    border-radius: 8px;
-    font-size: 16px;
-    width: 100%;
-    transition: all 0.3s ease;
+.signature {
+    text-align: center;
+    flex: 1;
+    max-width: 200px;
 }
 
-input[type="text"]:focus {
-    outline: none;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+.signature-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.signature-title {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 button {
-    padding: 15px 30px;
+    background: #D4AF37;
+    color: white;
     border: none;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background: var(--golden);
-    color: var(--grey);
-    font-weight: bold;
+    font-size: 1em;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    background: #C5A028;
 }
 
-button.secondary {
-    background: var(--grey);
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #D4AF37;
+    outline: none;
+}
+
+.download-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.download-button {
+    background: #D4AF37;
     color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
 }
 
-.help-text {
-    color: var(--grey);
-    font-size: 14px;
-    margin-top: 10px;
+.download-button:hover {
+    background: #C5A028;
+}
+
+#step3 {
+    background: transparent;
+    box-shadow: none;
+    max-width: none;
+    padding: 0;
 }
 
 /* Certificate Styles */
