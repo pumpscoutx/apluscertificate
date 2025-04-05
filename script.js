@@ -4,7 +4,7 @@ let usedTelegramIds = new Set();
 
 // Telegram Bot Token
 const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
-const GROUP_ID = '-1001987855584'; // Will be updated with correct ID
+const GROUP_ID = '-1002087855584'; // A+ Tutorial Class group ID
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -12,14 +12,42 @@ window.jsPDF = window.jspdf.jsPDF;
 // Test group ID on page load
 async function testGroupAccess() {
     try {
+        // First test if bot is working
+        const botResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getMe`);
+        const botData = await botResponse.json();
+        
+        if (!botData.ok) {
+            console.error('Bot Error:', botData.description);
+            return;
+        }
+        
+        console.log('Bot connected successfully:', botData.result.first_name);
+        
+        // Now test group access
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
         const data = await response.json();
-        console.log('Group Info:', data);
+        
         if (!data.ok) {
             console.error('Group ID Error:', data.description);
+            // Try alternative group ID format
+            const alternativeGroupId = GROUP_ID.replace('-1002', '-100');
+            console.log('Trying alternative group ID:', alternativeGroupId);
+            
+            const altResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${alternativeGroupId}`);
+            const altData = await altResponse.json();
+            
+            if (altData.ok) {
+                console.log('Found group with alternative ID:', altData.result.title);
+                window.GROUP_ID = alternativeGroupId; // Store working group ID
+            } else {
+                console.error('Alternative group ID also failed:', altData.description);
+            }
+        } else {
+            console.log('Group found:', data.result.title);
+            window.GROUP_ID = GROUP_ID; // Store working group ID
         }
     } catch (error) {
-        console.error('Error checking group:', error);
+        console.error('Error checking access:', error);
     }
 }
 
@@ -93,30 +121,35 @@ async function verifyTelegramMembership(telegramId) {
     try {
         console.log('Attempting to verify membership for ID:', telegramId);
         
+        // Use the working group ID if found during test
+        const currentGroupId = window.GROUP_ID || GROUP_ID;
+        
         // First, verify the group exists
-        const groupCheckResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
+        const groupCheckResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${currentGroupId}`);
         const groupData = await groupCheckResponse.json();
         
         if (!groupData.ok) {
-            throw new Error('Group not found. Please contact administrator with error: ' + groupData.description);
+            throw new Error('Unable to access group. Please contact administrator.');
         }
         
-        console.log('Group found:', groupData.result.title);
+        console.log('Checking membership in group:', groupData.result.title);
         
         // Now check membership
         const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
         const params = new URLSearchParams({
-            chat_id: GROUP_ID,
+            chat_id: currentGroupId,
             user_id: telegramId
         });
 
-        console.log('Checking membership...');
         const response = await fetch(`${apiUrl}?${params}`);
         const data = await response.json();
         
         console.log('Membership check response:', JSON.stringify(data, null, 2));
         
         if (!data.ok) {
+            if (data.description.includes('user not found')) {
+                throw new Error('Invalid Telegram ID. Please make sure you entered the correct ID.');
+            }
             throw new Error(data.description || 'Failed to verify membership');
         }
 
@@ -128,13 +161,17 @@ async function verifyTelegramMembership(telegramId) {
             const validStatuses = ['member', 'administrator', 'creator'];
             const isValid = validStatuses.includes(status);
             
-            console.log('Is valid member?', isValid);
-            return isValid;
+            if (!isValid) {
+                throw new Error('You are not currently a member of the group. Please join the group first.');
+            }
+            
+            console.log('Membership verified successfully');
+            return true;
         }
         
         return false;
     } catch (error) {
-        console.error('Detailed error:', error);
+        console.error('Verification error:', error);
         throw error;
     }
 }
