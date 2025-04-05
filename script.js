@@ -126,26 +126,28 @@ async function verifyTelegramMembership(telegramId) {
 }
 
 function nextStep(currentStep) {
-    const currentStepElement = document.getElementById(`step${currentStep}`);
-    const nextStepElement = document.getElementById(`step${currentStep + 1}`);
-    
     if (currentStep === 1) {
         const name = document.getElementById('name').value.trim();
         if (!name) {
             alert('Please enter your name');
             return;
         }
-        currentStepElement.style.display = 'none';
-        nextStepElement.style.display = 'block';
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
     } else if (currentStep === 2) {
         const telegramId = document.getElementById('telegramId').value.trim();
         if (!telegramId) {
             alert('Please enter your Telegram ID');
             return;
         }
-        // Skip verification and go directly to certificate generation
-        currentStepElement.style.display = 'none';
-        document.getElementById('step4').style.display = 'block';
+        
+        // Generate certificate immediately
+        const name = document.getElementById('name').value.trim();
+        generateCertificate(name, telegramId);
+        
+        // Hide all steps and show certificate
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('certificateContainer').style.display = 'block';
     }
 }
 
@@ -161,23 +163,23 @@ function generateCertificate(name, telegramId) {
     // Update certificate name
     document.getElementById('certificateName').textContent = name;
     
-    // Update current date
+    // Generate certificate ID
+    const certificateId = generateCertificateId();
+    document.getElementById('certificateId').textContent = certificateId;
+    
+    // Set current date
     const currentDate = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
-    document.getElementById('certificateDate').textContent = currentDate;
-
-    // Generate and update certificate ID
-    const certificateId = generateCertificateId();
-    document.getElementById('certificateId').textContent = certificateId;
-
+    document.getElementById('issueDate').textContent = currentDate;
+    
     // Store certificate information
     verifiedCertificates.set(certificateId, {
         name: name,
-        date: currentDate,
-        telegramId: telegramId
+        telegramId: telegramId,
+        date: currentDate
     });
 }
 
