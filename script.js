@@ -4,7 +4,7 @@ let usedTelegramIds = new Set();
 
 // Telegram Bot Token
 const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
-const GROUP_ID = '-1002087855584'; // A+ Tutorial Class group ID
+const GROUP_ID = '-1001987855584'; // Updated group ID format
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -47,7 +47,7 @@ function nextStep(step) {
         button.disabled = true;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
 
-        // Verify membership using Telegram Bot API
+        // Verify membership
         verifyTelegramMembership(telegramId)
             .then(isMember => {
                 if (isMember) {
@@ -55,13 +55,14 @@ function nextStep(step) {
                     document.getElementById('step2').style.display = 'none';
                     document.getElementById('step3').style.display = 'block';
                     currentStep = 3;
+                    usedTelegramIds.add(telegramId);
                 } else {
-                    alert('This Telegram ID is not a member of our group. Please join our Telegram group first.');
+                    alert('Verification failed. Please make sure:\n\n1. You are a member of our Telegram group\n2. You entered the correct Telegram ID\n3. The ID is from the account that joined the group');
                 }
             })
             .catch(error => {
                 console.error('Verification error:', error);
-                alert('Error verifying membership. Please try again later or contact support if the issue persists.');
+                alert('Error: ' + (error.message || 'Failed to verify membership. Please try again or contact support.'));
             })
             .finally(() => {
                 // Reset button state
@@ -73,24 +74,43 @@ function nextStep(step) {
 
 async function verifyTelegramMembership(telegramId) {
     try {
-        console.log('Verifying membership for ID:', telegramId);
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${GROUP_ID}&user_id=${telegramId}`);
+        console.log('Attempting to verify membership for ID:', telegramId);
+        console.log('Using group ID:', GROUP_ID);
+        
+        const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
+        const params = new URLSearchParams({
+            chat_id: GROUP_ID,
+            user_id: telegramId
+        });
+
+        console.log('Making API request to:', `${apiUrl}?${params}`);
+
+        const response = await fetch(`${apiUrl}?${params}`);
         const data = await response.json();
         
-        console.log('Telegram API response:', data);
+        console.log('Full API Response:', JSON.stringify(data, null, 2));
         
+        if (!data.ok) {
+            console.error('API Error:', data.description);
+            throw new Error(data.description || 'Failed to verify membership');
+        }
+
         if (data.ok && data.result) {
             const status = data.result.status;
-            const isValid = status === 'member' || status === 'administrator' || status === 'creator';
-            console.log('Member status:', status, 'Is valid:', isValid);
+            console.log('Member status:', status);
+            
+            // Valid member statuses
+            const validStatuses = ['member', 'administrator', 'creator'];
+            const isValid = validStatuses.includes(status);
+            
+            console.log('Is valid member?', isValid);
             return isValid;
         }
         
-        console.log('Invalid response:', data);
         return false;
     } catch (error) {
-        console.error('Telegram API error:', error);
-        throw new Error('Failed to verify membership. Please try again.');
+        console.error('Detailed error:', error);
+        throw error;
     }
 }
 
@@ -122,9 +142,6 @@ function generateCertificate(name, telegramId) {
         date: currentDate,
         telegramId: telegramId
     });
-
-    // Mark this Telegram ID as used
-    usedTelegramIds.add(telegramId);
 }
 
 // Handle Enter key press
