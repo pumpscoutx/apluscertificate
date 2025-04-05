@@ -14,12 +14,8 @@
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
 }
 
 .verify-button-container {
@@ -53,199 +49,45 @@ body {
     padding: 20px;
 }
 
-.form-step {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.step {
     text-align: center;
-    max-width: 500px;
-    margin: 0 auto;
+    margin-bottom: 30px;
 }
 
-.info-text {
-    color: #666;
+input {
+    padding: 12px 20px;
     margin: 10px 0;
-    font-size: 0.9em;
-}
-
-.logo {
-    width: 150px;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.certificate {
-    background: white;
-    width: 210mm;
-    height: 297mm;
-    padding: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.certificate .logo {
-    width: 120px;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.certificate h1 {
-    color: #D4AF37;
-    font-size: 36px;
-    margin: 20px 0;
-    text-transform: uppercase;
-}
-
-.certificate .recipient {
-    font-size: 18px;
-    color: #666;
-    margin: 10px 0;
-}
-
-.certificate .name {
-    font-size: 32px;
-    color: #333;
-    margin: 20px 0;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.certificate .description {
-    font-size: 18px;
-    color: #666;
-    margin: 20px 0;
-    line-height: 1.5;
-}
-
-.certificate .date,
-.certificate .certificate-id {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 300px;
     font-size: 16px;
-    color: #666;
-    margin: 10px 0;
-}
-
-.signatures {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 40px;
-    gap: 60px;
-    width: 100%;
-    padding: 0 40px;
-}
-
-.signature {
-    text-align: center;
-    flex: 1;
-    max-width: 200px;
-    border-top: 2px solid #D4AF37;
-    padding-top: 10px;
-}
-
-.signature-name {
-    font-weight: bold;
-    margin: 5px 0;
-    color: #333;
-    font-size: 18px;
-}
-
-.signature-title {
-    color: #666;
-    font-size: 14px;
-}
-
-.signature-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.medal-icon {
-    width: 48px;
-    height: 48px;
-    margin: 0;
-}
-
-.button-group {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
 }
 
 button {
-    background: #D4AF37;
+    background-color: var(--golden);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 16px;
     transition: background-color 0.3s;
-    margin: 5px;
 }
 
 button:hover {
-    background: #C5A028;
+    background-color: #B08F26;
 }
 
-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+.certificate {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto 30px;
+    background: white;
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-input[type="text"] {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-    transition: border-color 0.3s;
-}
-
-input[type="text"]:focus {
-    border-color: #D4AF37;
-    outline: none;
-}
-
-.download-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.download-button {
-    background: #D4AF37;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: background-color 0.3s;
-}
-
-.download-button:hover {
-    background: #C5A028;
-}
-
-#step3 {
-    background: transparent;
-    box-shadow: none;
-    max-width: none;
-    padding: 0;
-}
-
-/* Certificate Border */
 .certificate::before {
     content: '';
     position: absolute;
@@ -253,21 +95,133 @@ input[type="text"]:focus {
     left: 20px;
     right: 20px;
     bottom: 20px;
-    border: 2px solid #D4AF37;
+    border: 2px solid var(--golden);
     pointer-events: none;
 }
 
-/* Responsive Design */
-@media (max-width: 210mm) {
+.certificate-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.certificate-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+.old-english {
+    font-family: 'Old English Text MT', serif;
+    font-size: 64px;
+    color: var(--golden);
+    margin: 20px 0;
+}
+
+.certificate-body {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.recipient-intro {
+    font-size: 24px;
+    color: var(--grey);
+    margin-bottom: 10px;
+}
+
+.recipient-name {
+    font-size: 48px;
+    color: var(--golden);
+    margin: 20px 0;
+}
+
+.achievement-text {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--grey);
+    margin: 40px 0;
+    padding: 0 40px;
+}
+
+.signatures {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 60px;
+    width: 100%;
+}
+
+.signature {
+    text-align: center;
+    flex: 1;
+}
+
+.signature-name {
+    font-size: 24px;
+    color: var(--grey);
+    margin-bottom: 5px;
+}
+
+.signature-title {
+    font-size: 16px;
+    color: var(--golden);
+}
+
+.signature-divider {
+    margin: 0 40px;
+}
+
+.medal {
+    width: 60px;
+    height: 60px;
+}
+
+.download-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
     .certificate {
         width: 100%;
         height: auto;
-        min-height: 297mm;
+        padding: 20px;
     }
-    
-    .signatures {
+
+    .old-english {
+        font-size: 48px;
+    }
+
+    .recipient-name {
+        font-size: 36px;
+    }
+
+    .achievement-text {
+        font-size: 16px;
         padding: 0 20px;
-        gap: 30px;
+    }
+
+    .signatures {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .signature-divider {
+        margin: 20px 0;
     }
 }
 

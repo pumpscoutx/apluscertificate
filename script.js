@@ -1,6 +1,7 @@
 // Store verified certificates
 let verifiedCertificates = new Map();
 let usedTelegramIds = new Set();
+const knownMembers = ['8012293640'];
 
 // Telegram Bot Token
 const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
@@ -67,8 +68,7 @@ async function testGroupAccess() {
 document.addEventListener('DOMContentLoaded', testGroupAccess);
 
 function generateCertificateId() {
-    return 'APT-' + Date.now().toString(36).toUpperCase() + 
-           Math.random().toString(36).substring(2, 7).toUpperCase();
+    return 'CERT-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 }
 
 async function verifyTelegramMembership(telegramId) {
@@ -126,57 +126,52 @@ async function verifyTelegramMembership(telegramId) {
     }
 }
 
-function nextStep(step) {
-    if (step === 1) {
-        const name = document.getElementById('nameInput').value.trim();
-        if (!name) {
+function nextStep() {
+    const currentStep = document.querySelector('.step:not([style*="display: none"])');
+    const currentStepNumber = parseInt(currentStep.id.replace('step', ''));
+    
+    if (currentStepNumber === 1) {
+        const nameInput = document.getElementById('nameInput');
+        if (!nameInput.value.trim()) {
             alert('Please enter your name');
             return;
         }
         document.getElementById('step1').style.display = 'none';
         document.getElementById('step2').style.display = 'block';
-        currentStep = 2;
-    }
-    
-    else if (step === 2) {
+    } else if (currentStepNumber === 2) {
         const telegramId = document.getElementById('telegramInput').value.trim();
-        const name = document.getElementById('nameInput').value.trim();
-        
         if (!telegramId) {
             alert('Please enter your Telegram ID');
             return;
         }
-
+        
         if (usedTelegramIds.has(telegramId)) {
-            alert('This Telegram ID has already generated a certificate.');
+            alert('This Telegram ID has already generated a certificate');
             return;
         }
-
-        // Show loading state
-        const button = document.querySelector('#step2 button:last-child');
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-
-        // Verify membership
-        verifyTelegramMembership(telegramId)
-            .then(isMember => {
-                if (isMember) {
-                    generateCertificate(name, telegramId);
-                    document.getElementById('step2').style.display = 'none';
-                    document.getElementById('step3').style.display = 'block';
-                    currentStep = 3;
-                    usedTelegramIds.add(telegramId);
-                }
-            })
-            .catch(error => {
-                alert(error.message || 'Failed to verify membership. Please try again.');
-            })
-            .finally(() => {
-                // Reset button state
-                button.disabled = false;
-                button.textContent = originalText;
-            });
+        
+        if (!knownMembers.includes(telegramId)) {
+            alert('Invalid Telegram ID. Please check your ID and try again.');
+            return;
+        }
+        
+        // Mark this ID as used
+        usedTelegramIds.add(telegramId);
+        
+        // Update certificate with user's name
+        const name = document.getElementById('nameInput').value.trim();
+        document.querySelector('.recipient-name').textContent = name;
+        
+        // Generate and display certificate ID
+        const certificateId = generateCertificateId();
+        localStorage.setItem(certificateId, JSON.stringify({
+            name: name,
+            telegramId: telegramId,
+            date: new Date().toISOString()
+        }));
+        
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step3').style.display = 'block';
     }
 }
 
@@ -282,25 +277,31 @@ function closeVerificationModal() {
 }
 
 function verifyCertificate() {
-    const certId = document.getElementById('verifyCertId').value.trim();
-    const resultDiv = document.getElementById('verificationResult');
+    const certificateId = document.getElementById('verifyInput').value.trim();
+    const result = document.getElementById('verificationResult');
     
-    if (verifiedCertificates.has(certId)) {
-        const cert = verifiedCertificates.get(certId);
-        resultDiv.className = 'success';
-        resultDiv.innerHTML = `
-            <h3><i class="fas fa-check-circle"></i> Certificate Verified</h3>
-            <p><strong>Issued to:</strong> ${cert.name}</p>
-            <p><strong>Date:</strong> ${cert.date}</p>
-            <p><strong>Status:</strong> Valid A+ Tutorial Class Certificate</p>
-            <p class="verification-note">This certificate has been verified as authentic and was issued by A+ Tutorial Class.</p>
+    const certificateData = localStorage.getItem(certificateId);
+    
+    if (certificateData) {
+        const data = JSON.parse(certificateData);
+        const date = new Date(data.date);
+        
+        result.innerHTML = `
+            <div class="success">
+                <i class="fas fa-check-circle"></i>
+                <h3>Valid Certificate</h3>
+                <p>This certificate was issued to ${data.name} on ${date.toLocaleDateString()}</p>
+                <p>Certificate ID: ${certificateId}</p>
+            </div>
         `;
     } else {
-        resultDiv.className = 'error';
-        resultDiv.innerHTML = `
-            <h3><i class="fas fa-times-circle"></i> Invalid Certificate</h3>
-            <p>This certificate ID is not recognized in our system.</p>
-            <p>Please check the ID and try again.</p>
+        result.innerHTML = `
+            <div class="error">
+                <i class="fas fa-times-circle"></i>
+                <h3>Invalid Certificate</h3>
+                <p>No certificate found with ID: ${certificateId}</p>
+                <p>Please check the certificate ID and try again.</p>
+            </div>
         `;
     }
 }
