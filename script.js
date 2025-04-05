@@ -4,10 +4,27 @@ let usedTelegramIds = new Set();
 
 // Telegram Bot Token
 const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
-const GROUP_ID = '-1001987855584'; // Updated group ID format
+const GROUP_ID = '-1001987855584'; // Will be updated with correct ID
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
+
+// Test group ID on page load
+async function testGroupAccess() {
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
+        const data = await response.json();
+        console.log('Group Info:', data);
+        if (!data.ok) {
+            console.error('Group ID Error:', data.description);
+        }
+    } catch (error) {
+        console.error('Error checking group:', error);
+    }
+}
+
+// Call test function when page loads
+document.addEventListener('DOMContentLoaded', testGroupAccess);
 
 function generateCertificateId() {
     return 'APT-' + Date.now().toString(36).toUpperCase() + 
@@ -75,23 +92,31 @@ function nextStep(step) {
 async function verifyTelegramMembership(telegramId) {
     try {
         console.log('Attempting to verify membership for ID:', telegramId);
-        console.log('Using group ID:', GROUP_ID);
         
+        // First, verify the group exists
+        const groupCheckResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
+        const groupData = await groupCheckResponse.json();
+        
+        if (!groupData.ok) {
+            throw new Error('Group not found. Please contact administrator with error: ' + groupData.description);
+        }
+        
+        console.log('Group found:', groupData.result.title);
+        
+        // Now check membership
         const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
         const params = new URLSearchParams({
             chat_id: GROUP_ID,
             user_id: telegramId
         });
 
-        console.log('Making API request to:', `${apiUrl}?${params}`);
-
+        console.log('Checking membership...');
         const response = await fetch(`${apiUrl}?${params}`);
         const data = await response.json();
         
-        console.log('Full API Response:', JSON.stringify(data, null, 2));
+        console.log('Membership check response:', JSON.stringify(data, null, 2));
         
         if (!data.ok) {
-            console.error('API Error:', data.description);
             throw new Error(data.description || 'Failed to verify membership');
         }
 
