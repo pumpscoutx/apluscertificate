@@ -1,11 +1,10 @@
 // Store verified certificates
 let verifiedCertificates = new Map();
 let usedTelegramIds = new Set();
-const knownMembers = ['8012293640'];
 
 // Telegram Bot Token
-const TELEGRAM_BOT_TOKEN = '6887558491:AAEcgDhEEXTZxZPTJEGDxTBZxhXhgPQwTxE';
-const GROUP_ID = '-2570633428';
+const BOT_TOKEN = '8053426548:AAFSsuAvibdtBpekBtOmKj71qlheu3rnD2g';
+const GROUP_ID = '-1002570633428'; // Private group ID with -100 prefix
 
 let currentStep = 1;
 window.jsPDF = window.jspdf.jsPDF;
@@ -14,7 +13,7 @@ window.jsPDF = window.jspdf.jsPDF;
 async function testGroupAccess() {
     try {
         // First test if bot is working
-        const botResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe`);
+        const botResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getMe`);
         const botData = await botResponse.json();
         
         if (!botData.ok) {
@@ -25,7 +24,7 @@ async function testGroupAccess() {
         console.log('Bot connected successfully:', botData.result.first_name);
         
         // Now test group access with original ID
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${GROUP_ID}`);
         const data = await response.json();
         
         if (!data.ok) {
@@ -34,7 +33,7 @@ async function testGroupAccess() {
             const alternativeGroupId = `-100${GROUP_ID.replace('-', '')}`;
             console.log('Trying alternative group ID:', alternativeGroupId);
             
-            const altResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=${alternativeGroupId}`);
+            const altResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=${alternativeGroupId}`);
             const altData = await altResponse.json();
             
             if (altData.ok) {
@@ -45,7 +44,7 @@ async function testGroupAccess() {
                 const basicId = GROUP_ID.replace('-', '');
                 console.log('Trying basic ID:', basicId);
                 
-                const basicResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat?chat_id=-${basicId}`);
+                const basicResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChat?chat_id=-${basicId}`);
                 const basicData = await basicResponse.json();
                 
                 if (basicData.ok) {
@@ -72,34 +71,74 @@ function generateCertificateId() {
            Math.random().toString(36).substring(2, 7).toUpperCase();
 }
 
-async function verifyTelegramMembership(userId) {
+async function verifyTelegramMembership(telegramId) {
     try {
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChatMember?chat_id=${GROUP_ID}&user_id=${userId}`);
+        console.log('Starting verification for ID:', telegramId);
+        
+        // Check if the ID is valid
+        if (!telegramId || isNaN(telegramId)) {
+            throw new Error('Please enter a valid Telegram ID (numbers only)');
+        }
+
+        // Check member status
+        const memberUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`;
+        const memberParams = new URLSearchParams({
+            chat_id: GROUP_ID,
+            user_id: telegramId
+        });
+
+        console.log('Checking member status...');
+        console.log('Using group ID:', GROUP_ID);
+        console.log('User ID:', telegramId);
+        
+        const response = await fetch(`${memberUrl}?${memberParams}`);
         const data = await response.json();
         
-        if (data.ok && data.result && ['creator', 'administrator', 'member'].includes(data.result.status)) {
-            return true;
-        } else {
-            throw new Error('User is not a member of the group');
+        console.log('Member check response:', data);
+        
+        if (!data.ok) {
+            if (data.description.includes('user not found')) {
+                throw new Error('Invalid Telegram ID. Please make sure you entered the correct ID from @userinfobot.');
+            }
+            if (data.description.includes('chat not found')) {
+                throw new Error('Unable to verify group membership. Please contact administrator.');
+            }
+            throw new Error(data.description || 'Failed to verify membership');
         }
+
+        if (!data.result || !data.result.status) {
+            throw new Error('Unable to verify membership status.');
+        }
+
+        const status = data.result.status;
+        console.log('Member status:', status);
+        
+        // Only allow active members
+        if (status !== 'member' && status !== 'administrator' && status !== 'creator') {
+            throw new Error('You must be an active member of the A+ Tutorial Class group to generate a certificate.');
+        }
+
+        console.log('Membership verified successfully');
+        return true;
     } catch (error) {
-        throw new Error('Failed to verify membership. Please make sure you are a member of our Telegram group.');
+        console.error('Verification error:', error);
+        throw error;
     }
 }
 
-function nextStep() {
-    const currentStep = document.querySelector('.step:not([style*="display: none"])');
-    const currentStepNumber = parseInt(currentStep.id.replace('step', ''));
-    
-    if (currentStepNumber === 1) {
-        const nameInput = document.getElementById('nameInput');
-        if (!nameInput.value.trim()) {
+function nextStep(step) {
+    if (step === 1) {
+        const name = document.getElementById('nameInput').value.trim();
+        if (!name) {
             alert('Please enter your name');
             return;
         }
         document.getElementById('step1').style.display = 'none';
         document.getElementById('step2').style.display = 'block';
-    } else if (currentStepNumber === 2) {
+        currentStep = 2;
+    }
+    
+    else if (step === 2) {
         const telegramId = document.getElementById('telegramInput').value.trim();
         const name = document.getElementById('nameInput').value.trim();
         
@@ -107,12 +146,12 @@ function nextStep() {
             alert('Please enter your Telegram ID');
             return;
         }
-        
+
         if (usedTelegramIds.has(telegramId)) {
             alert('This Telegram ID has already generated a certificate.');
             return;
         }
-        
+
         // Show loading state
         const button = document.querySelector('#step2 button:last-child');
         const originalText = button.textContent;
@@ -123,19 +162,10 @@ function nextStep() {
         verifyTelegramMembership(telegramId)
             .then(isMember => {
                 if (isMember) {
-                    // Update certificate with user's name
-                    document.querySelector('.recipient-name').textContent = name;
-                    
-                    // Generate and store certificate data
-                    const certificateId = generateCertificateId();
-                    localStorage.setItem(certificateId, JSON.stringify({
-                        name: name,
-                        telegramId: telegramId,
-                        date: new Date().toISOString()
-                    }));
-                    
+                    generateCertificate(name, telegramId);
                     document.getElementById('step2').style.display = 'none';
                     document.getElementById('step3').style.display = 'block';
+                    currentStep = 3;
                     usedTelegramIds.add(telegramId);
                 }
             })
@@ -192,43 +222,54 @@ document.addEventListener('keypress', function(e) {
     }
 });
 
-async function downloadAsPDF() {
+async function downloadCertificate(format) {
     const certificate = document.querySelector('.certificate');
+    const scale = 2; // Increase quality
     
-    // Create canvas
-    const canvas = await html2canvas(certificate, {
-        scale: 2,
-        useCORS: true,
-        logging: false
-    });
-    
-    // Create PDF
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgData = canvas.toDataURL('image/jpeg', 1.0);
-    
-    // Add image to PDF
-    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-    
-    // Download PDF
-    pdf.save('certificate.pdf');
-}
+    try {
+        const canvas = await html2canvas(certificate, {
+            scale: scale,
+            useCORS: true,
+            logging: false,
+            allowTaint: true,
+            backgroundColor: null
+        });
 
-async function downloadAsImage() {
-    const certificate = document.querySelector('.certificate');
-    
-    // Create canvas
-    const canvas = await html2canvas(certificate, {
-        scale: 2,
-        useCORS: true,
-        logging: false
-    });
-    
-    // Create download link
-    const link = document.createElement('a');
-    link.download = 'certificate.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+        if (format === 'pdf') {
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4',
+                putOnlyUsedFonts: true,
+                floatPrecision: 16
+            });
+            
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            // Add image
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            
+            // Add hidden text layer for copy-paste
+            const cert = verifiedCertificates.get(document.getElementById('certificateId').textContent);
+            pdf.setFontSize(12);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(`Certificate of Completion\n\nThis is to certify that\n${cert.name}\nhas successfully completed the A+ Tutorial Class program\n\nIssued on ${cert.date}\nCertificate ID: ${document.getElementById('certificateId').textContent}`, 10, 10, {
+                hidden: true
+            });
+            
+            pdf.save('A+_Tutorial_Certificate.pdf');
+        } else {
+            const link = document.createElement('a');
+            link.download = 'A+_Tutorial_Certificate.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    } catch (error) {
+        console.error('Error generating certificate:', error);
+        alert('There was an error generating your certificate. Please try again.');
+    }
 }
 
 // Certificate verification functionality
@@ -241,31 +282,25 @@ function closeVerificationModal() {
 }
 
 function verifyCertificate() {
-    const certificateId = document.getElementById('verifyInput').value.trim();
-    const result = document.getElementById('verificationResult');
+    const certId = document.getElementById('verifyCertId').value.trim();
+    const resultDiv = document.getElementById('verificationResult');
     
-    const certificateData = localStorage.getItem(certificateId);
-    
-    if (certificateData) {
-        const data = JSON.parse(certificateData);
-        const date = new Date(data.date);
-        
-        result.innerHTML = `
-            <div class="success">
-                <i class="fas fa-check-circle"></i>
-                <h3>Valid Certificate</h3>
-                <p>This certificate was issued to ${data.name} on ${date.toLocaleDateString()}</p>
-                <p>Certificate ID: ${certificateId}</p>
-            </div>
+    if (verifiedCertificates.has(certId)) {
+        const cert = verifiedCertificates.get(certId);
+        resultDiv.className = 'success';
+        resultDiv.innerHTML = `
+            <h3><i class="fas fa-check-circle"></i> Certificate Verified</h3>
+            <p><strong>Issued to:</strong> ${cert.name}</p>
+            <p><strong>Date:</strong> ${cert.date}</p>
+            <p><strong>Status:</strong> Valid A+ Tutorial Class Certificate</p>
+            <p class="verification-note">This certificate has been verified as authentic and was issued by A+ Tutorial Class.</p>
         `;
     } else {
-        result.innerHTML = `
-            <div class="error">
-                <i class="fas fa-times-circle"></i>
-                <h3>Invalid Certificate</h3>
-                <p>No certificate found with ID: ${certificateId}</p>
-                <p>Please check the certificate ID and try again.</p>
-            </div>
+        resultDiv.className = 'error';
+        resultDiv.innerHTML = `
+            <h3><i class="fas fa-times-circle"></i> Invalid Certificate</h3>
+            <p>This certificate ID is not recognized in our system.</p>
+            <p>Please check the ID and try again.</p>
         `;
     }
 }
