@@ -66,8 +66,31 @@ async function testGroupAccess() {
 document.addEventListener('DOMContentLoaded', testGroupAccess);
 
 function generateCertificateId() {
-    return 'APT-' + Date.now().toString(36).toUpperCase() + 
-           Math.random().toString(36).substring(2, 7).toUpperCase();
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let id = '';
+    for (let i = 0; i < 12; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id.match(/.{1,4}/g).join('-');
+}
+
+function createFirework(x, y) {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    firework.style.left = x + 'px';
+    firework.style.top = y + 'px';
+    document.body.appendChild(firework);
+    setTimeout(() => firework.remove(), 1000);
+}
+
+function showFireworks() {
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createFirework(x, y);
+        }, i * 50);
+    }
 }
 
 async function verifyTelegramMembership(telegramId) {
@@ -133,42 +156,28 @@ async function verifyTelegramMembership(telegramId) {
 }
 
 function nextStep(currentStep) {
+    const currentElement = document.getElementById(`step${currentStep}`);
+    const nextElement = document.getElementById(`step${currentStep + 1}`);
+    const certificateContainer = document.getElementById('certificateContainer');
+    
     if (currentStep === 1) {
         const name = document.getElementById('name').value.trim();
         if (!name) {
             alert('Please enter your name');
             return;
         }
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
+        currentElement.style.display = 'none';
+        nextElement.style.display = 'block';
     } else if (currentStep === 2) {
         const telegramId = document.getElementById('telegramId').value.trim();
         if (!telegramId) {
             alert('Please enter your Telegram ID');
             return;
         }
-
-        // Show loading state
-        const button = document.querySelector('#step2 button:last-child');
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-
-        // Verify membership
-        verifyTelegramMembership(telegramId)
-            .then(isMember => {
-                if (isMember) {
-                    const name = document.getElementById('name').value.trim();
-                    generateCertificate(name, telegramId);
-                    document.getElementById('step2').style.display = 'none';
-                    document.getElementById('certificateContainer').style.display = 'block';
-                }
-            })
-            .catch(error => {
-                alert(error.message || 'Failed to verify membership. Please try again.');
-                button.disabled = false;
-                button.textContent = originalText;
-            });
+        currentElement.style.display = 'none';
+        certificateContainer.style.display = 'block';
+        generateCertificate();
+        showFireworks();
     }
 }
 
@@ -180,27 +189,25 @@ function previousStep(currentStep) {
     previousStepElement.style.display = 'block';
 }
 
-function generateCertificate(name, telegramId) {
-    // Update certificate name
-    document.getElementById('certificateName').textContent = name;
-    
-    // Generate certificate ID
+function generateCertificate() {
+    const name = document.getElementById('name').value;
+    const telegramId = document.getElementById('telegramId').value;
     const certificateId = generateCertificateId();
-    document.getElementById('certificateId').textContent = certificateId;
-    
-    // Set current date
-    const currentDate = new Date().toLocaleDateString('en-US', {
+    const issueDate = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
-    document.getElementById('issueDate').textContent = currentDate;
-    
+
+    document.getElementById('certificateName').textContent = name;
+    document.getElementById('certificateId').textContent = certificateId;
+    document.getElementById('issueDate').textContent = issueDate;
+
     // Store certificate information
     verifiedCertificates.set(certificateId, {
-        name: name,
-        telegramId: telegramId,
-        date: currentDate
+        name,
+        telegramId,
+        issueDate
     });
 }
 
