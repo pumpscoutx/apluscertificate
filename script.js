@@ -174,10 +174,28 @@ function nextStep(currentStep) {
             alert('Please enter your Telegram ID');
             return;
         }
-        currentElement.style.display = 'none';
-        certificateContainer.style.display = 'block';
-        generateCertificate();
-        showFireworks();
+
+        // Show loading state
+        const button = document.querySelector('#step2 button:last-child');
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+        // Verify membership
+        verifyTelegramMembership(telegramId)
+            .then(isMember => {
+                if (isMember) {
+                    currentElement.style.display = 'none';
+                    certificateContainer.style.display = 'block';
+                    generateCertificate();
+                    showFireworks();
+                }
+            })
+            .catch(error => {
+                alert(error.message || 'Failed to verify membership. Please try again.');
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
     }
 }
 
@@ -222,7 +240,7 @@ document.addEventListener('keypress', function(e) {
 
 async function downloadCertificate(format) {
     const certificate = document.querySelector('.certificate');
-    const scale = 2; // Increase quality
+    const scale = 2;
     
     try {
         const canvas = await html2canvas(certificate, {
@@ -246,23 +264,8 @@ async function downloadCertificate(format) {
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
             
-            // Add image
             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            
-            // Add hidden text layer for copy-paste
-            const cert = verifiedCertificates.get(document.getElementById('certificateId').textContent);
-            pdf.setFontSize(12);
-            pdf.setTextColor(0, 0, 0);
-            pdf.text(`Certificate of Completion\n\nThis is to certify that\n${cert.name}\nhas successfully completed the A+ Tutorial Class program\n\nIssued on ${cert.date}\nCertificate ID: ${document.getElementById('certificateId').textContent}`, 10, 10, {
-                hidden: true
-            });
-            
             pdf.save('A+_Tutorial_Certificate.pdf');
-        } else {
-            const link = document.createElement('a');
-            link.download = 'A+_Tutorial_Certificate.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
         }
     } catch (error) {
         console.error('Error generating certificate:', error);
@@ -280,16 +283,25 @@ function closeVerificationModal() {
 }
 
 function verifyCertificate() {
-    const certId = document.getElementById('verifyCertId').value.trim();
+    const certId = document.getElementById('verifyCertificateId').value.trim();
     const resultDiv = document.getElementById('verificationResult');
     
-    if (verifiedCertificates.has(certId)) {
-        const cert = verifiedCertificates.get(certId);
+    if (!certId) {
+        resultDiv.className = 'error';
+        resultDiv.innerHTML = `
+            <h3><i class="fas fa-times-circle"></i> Error</h3>
+            <p>Please enter a certificate ID.</p>
+        `;
+        return;
+    }
+
+    const cert = verifiedCertificates.get(certId);
+    if (cert) {
         resultDiv.className = 'success';
         resultDiv.innerHTML = `
             <h3><i class="fas fa-check-circle"></i> Certificate Verified</h3>
             <p><strong>Issued to:</strong> ${cert.name}</p>
-            <p><strong>Date:</strong> ${cert.date}</p>
+            <p><strong>Issue Date:</strong> ${cert.issueDate}</p>
             <p><strong>Status:</strong> Valid A+ Tutorial Class Certificate</p>
             <p class="verification-note">This certificate has been verified as authentic and was issued by A+ Tutorial Class.</p>
         `;

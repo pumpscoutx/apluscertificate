@@ -189,11 +189,12 @@ button:hover {
 }
 
 .recipient-name {
-    font-family: 'Old English Text MT', serif;
-    font-size: 2.5rem;
+    font-family: 'Freestyle Script', 'Brush Script MT', cursive;
+    font-size: 3rem;
     color: var(--golden);
     margin: 1.5rem 0;
-    font-weight: 600;
+    font-weight: 500;
+    line-height: 1.2;
 }
 
 .achievement-text {
@@ -284,13 +285,12 @@ button:hover {
     position: absolute;
     bottom: 2rem;
     right: 2rem;
-    width: 100px;
-    height: 100px;
-    background-image: url('seal.svg');
+    width: 120px;
+    height: 120px;
+    background-image: url('certified-seal.png');
     background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.8;
-    transform: rotate(-15deg);
+    opacity: 0.9;
     z-index: 1;
 }
 
