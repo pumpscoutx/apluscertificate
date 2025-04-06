@@ -126,15 +126,17 @@ button:hover {
 }
 
 .certificate::after {
-    content: '';
+    content: 'A+ Tutorial Class';
     position: absolute;
-    bottom: 3rem;
-    right: 3rem;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: transparent;
-    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 8rem;
+    font-weight: bold;
+    color: rgba(212, 175, 55, 0.1);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .certificate-content {
@@ -145,6 +147,7 @@ button:hover {
     justify-content: space-between;
     position: relative;
     z-index: 2;
+    padding: 1rem;
 }
 
 .certificate-header {
@@ -289,10 +292,11 @@ button:hover {
     background-image: url('signature-seal.png');
     background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.9;
+    opacity: 0.85;
     z-index: 3;
     transform: rotate(-5deg);
-    filter: brightness(0.15) contrast(1.2);
+    filter: brightness(0.2) contrast(1.2);
+    pointer-events: none;
 }
 
 .certificate-text {
