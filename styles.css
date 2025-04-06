@@ -292,10 +292,10 @@ button:hover {
     background-image: url('signature-seal.png');
     background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.85;
+    opacity: 1;
     z-index: 3;
     transform: rotate(-5deg);
-    filter: brightness(0.2) contrast(1.2);
+    filter: contrast(1.2);
     pointer-events: none;
 }
 
