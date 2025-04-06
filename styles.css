@@ -115,13 +115,14 @@ button:hover {
 .certificate::before {
     content: '';
     position: absolute;
-    top: 1rem;
-    left: 1rem;
-    right: 1rem;
-    bottom: 1rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border: 2px solid var(--golden);
-    border-radius: 5px;
+    margin: 1rem;
     pointer-events: none;
+    z-index: 1;
 }
 
 .certificate::after {
@@ -189,12 +190,13 @@ button:hover {
 }
 
 .recipient-name {
-    font-family: 'Freestyle Script', 'Brush Script MT', cursive;
-    font-size: 3rem;
+    font-family: 'Alex Brush', cursive;
+    font-size: 3.5rem;
     color: var(--golden);
     margin: 1.5rem 0;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.2;
+    text-align: center;
 }
 
 .achievement-text {
@@ -283,15 +285,29 @@ button:hover {
 
 .certificate-seal {
     position: absolute;
-    bottom: 2rem;
-    right: 2rem;
-    width: 120px;
-    height: 120px;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    width: 150px;
+    height: 150px;
     background-image: url('certified-seal.png');
     background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.9;
-    z-index: 1;
+    opacity: 1;
+    z-index: 2;
+}
+
+.certificate-text {
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 1rem 0;
+    color: var(--grey);
+}
+
+h1 {
+    text-align: center;
+    color: var(--golden);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 @media (max-width: 768px) {

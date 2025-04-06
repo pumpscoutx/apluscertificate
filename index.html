@@ -6,6 +6,7 @@
     <title>A+ Tutorial Class Certificate Generator</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="verify-button-container">
@@ -34,45 +35,29 @@
         </div>
 
         <div class="certificate-container" id="certificateContainer" style="display: none;">
-            <div class="certificate" id="certificate">
-                <div class="certificate-seal"></div>
-                <div class="certificate-content">
-                    <div class="certificate-header">
-                        <h1 class="old-english">A+ Tutorial Class</h1>
-                        <p class="certificate-title">Certificate of Achievement</p>
+            <div class="certificate">
+                <h1>Certificate of Completion</h1>
+                <p class="certificate-text">This is to certify that</p>
+                <h2 id="certificateName" class="recipient-name"></h2>
+                <p class="certificate-text">has successfully completed the A+ Tutorial Class program</p>
+                <div class="date-section">
+                    <p>Issued on <span id="issueDate"></span></p>
+                </div>
+                <p class="certificate-id">Certificate ID: <span id="certificateId"></span></p>
+                <div class="signatures">
+                    <div class="signature">
+                        <img src="signature1.png" alt="Signature" class="signature-image">
+                        <p class="signature-name">Naol Getahun</p>
+                        <p class="signature-title">Executive Officer</p>
                     </div>
-                    
-                    <div class="certificate-body">
-                        <p class="recipient-intro">This is to certify that</p>
-                        <h2 class="recipient-name" id="certificateName"></h2>
-                        <p class="achievement-text">
-                            has successfully completed the A+ Tutorial Class program, demonstrating exceptional dedication and commitment to learning. This achievement reflects their hard work and perseverance in mastering the course material.
-                        </p>
-                        
-                        <div class="certificate-id">
-                            Certificate ID: <span id="certificateId"></span>
-                        </div>
-                        
-                        <div class="signatures">
-                            <div class="signature">
-                                <img src="signature1.png" alt="Signature" class="signature-image">
-                                <p class="signature-name">Naol Getahun</p>
-                                <p class="signature-title">Executive Officer</p>
-                            </div>
-                            <div class="signature-divider"></div>
-                            <div class="signature">
-                                <img src="signature2.png" alt="Signature" class="signature-image">
-                                <p class="signature-name">Daniel Thomas</p>
-                                <p class="signature-title">Operations Manager</p>
-                            </div>
-                        </div>
-                        
-                        <div class="certificate-footer">
-                            <p>Issued on: <span id="issueDate"></span></p>
-                            <p class="verification-note">Verify this certificate at our website with Certificate ID</p>
-                        </div>
+                    <div class="signature-divider"></div>
+                    <div class="signature">
+                        <img src="signature2.png" alt="Signature" class="signature-image">
+                        <p class="signature-name">Daniel Thomas</p>
+                        <p class="signature-title">Operations Manager</p>
                     </div>
                 </div>
+                <div class="certificate-seal"></div>
             </div>
             
             <div class="download-buttons">
