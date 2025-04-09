@@ -233,6 +233,10 @@ button:hover {
     height: 60px;
     margin-bottom: 0.5rem;
     object-fit: contain;
+    background-image: url('abstract-signature.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .signature-name {
@@ -286,7 +290,7 @@ button:hover {
 .certificate-seal {
     position: absolute;
     bottom: 3rem;
-    right: 3rem;
+    left: 3rem;
     width: 150px;
     height: 150px;
     background-image: url('electronic-seal.png');
